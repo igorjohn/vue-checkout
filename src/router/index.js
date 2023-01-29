@@ -6,7 +6,7 @@ const routes = [
     path: '/:catchAll(.*)', redirect: '/checkout'
   },
   {
-    path: '/checkout',
+    path: '/',
     name: 'Checkout',
     component: CheckoutView
   }
