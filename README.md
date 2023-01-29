@@ -1,4 +1,4 @@
-# front-pepper-2023
+# vue-checkout
 
 ## Project setup
 ```
