@@ -385,11 +385,11 @@ export default {
             </template>
 
             <div class="mt-4 flex flex-col gap-3">
-                <span class="text-xs text-gray-500 block">
+                <span class="text-xs text-gray-400 block">
                     Esta compra é processada por Pepper Tecnologia e Pagamentos Ltda. *Taxa de 2,99% a.m.
-                    <a href="#" class="text-xs text-gray-500 hover:text-indigo-500 transition duration-500">Termos de uso e privacidade</a>
+                    <a href="#" class="text-xs text-gray-400 hover:text-indigo-500 transition duration-500">Termos de uso e privacidade</a>
                 </span>
-                <span class="text-xs text-gray-500 block">Dúvidas? Entre em contato com o produtor: <a href="mailto:contato@produtor" class="text-xs ml-1 underline text-gray-500 font-medium hover:text-indigo-500 transition duration-500">contato@produtor.uy</a></span>
+                <span class="text-xs text-gray-400 block">Dúvidas? Entre em contato com o produtor: <a href="mailto:contato@produtor" class="text-xs ml-1 underline text-gray-500 font-medium hover:text-indigo-500 transition duration-500">contato@produtor.uy</a></span>
             </div>
 
         </div>
