@@ -273,7 +273,7 @@ export default {
                             Número do cartão:
                         </label>
                         <div :class="Classes.containerInputIcon">
-                            <input :class="Classes.input" required inputmode="text" type="text" />
+                            <input :class="Classes.input" required inputmode="tel" type="text" />
                         </div>
                     </div>
 
@@ -309,7 +309,7 @@ export default {
                             CVV:
                         </label>
                         <div :class="Classes.containerInputIcon">
-                            <input :class="Classes.inputHasIcon" required maxlength="4" inputmode="text" type="text" />
+                            <input :class="Classes.inputHasIcon" required maxlength="4" inputmode="tel" type="text" />
                             <div v-html="icons.lock" class="w-4 absolute top-0 left-0 h-[36px] flex items-center justify-center mx-2 text-slate-500"></div>
                         </div>
                     </div>
