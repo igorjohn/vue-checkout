@@ -33,7 +33,9 @@ const installment = [
 
 <script type="text/javascript">
 
+// Mock images
 import BannerImg from '@/assets/img/mock/checkout-banner.png';
+import OrderBump01 from '@/assets/img/mock/orderbump-01.jpeg';
 
 export default {
     data() {
@@ -43,33 +45,46 @@ export default {
             checkoutHas2Columns: true,
             selectedInstallment: 12,
 
-            CheckoutBadges: [
-                {
-                    id: 1,
-                    isShown: true,
-                    title: 'Dados protegidos',
-                    body: 'Os seus dados são confidenciais e seguros.',
-                    icon: `
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
-                        <path fill-rule="evenodd" d="M12.516 2.17a.75.75 0 00-1.032 0 11.209 11.209 0 01-7.877 3.08.75.75 0 00-.722.515A12.74 12.74 0 002.25 9.75c0 5.942 4.064 10.933 9.563 12.348a.749.749 0 00.374 0c5.499-1.415 9.563-6.406 9.563-12.348 0-1.39-.223-2.73-.635-3.985a.75.75 0 00-.722-.516l-.143.001c-2.996 0-5.717-1.17-7.734-3.08zm3.094 8.016a.75.75 0 10-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 00-1.06 1.06l2.25 2.25a.75.75 0 001.14-.094l3.75-5.25z" clip-rule="evenodd" />
-                    </svg>`
-                },
-                {
-                    id: 2,
-                    isShown: true,
-                    title: 'Checkout 100% seguro',
-                    body: 'As informações desta compra são criptografadas.',
-                    icon: `
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
-                        <path fill-rule="evenodd" d="M12 1.5a5.25 5.25 0 00-5.25 5.25v3a3 3 0 00-3 3v6.75a3 3 0 003 3h10.5a3 3 0 003-3v-6.75a3 3 0 00-3-3v-3c0-2.9-2.35-5.25-5.25-5.25zm3.75 8.25v-3a3.75 3.75 0 10-7.5 0v3h7.5z" clip-rule="evenodd" />
-                    </svg>`
+            Elements: {
+                Badges: [
+                    {
+                        id: 1,
+                        isShown: true,
+                        title: 'Dados protegidos',
+                        body: 'Os seus dados são confidenciais e seguros.',
+                        icon: `
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                            <path fill-rule="evenodd" d="M12.516 2.17a.75.75 0 00-1.032 0 11.209 11.209 0 01-7.877 3.08.75.75 0 00-.722.515A12.74 12.74 0 002.25 9.75c0 5.942 4.064 10.933 9.563 12.348a.749.749 0 00.374 0c5.499-1.415 9.563-6.406 9.563-12.348 0-1.39-.223-2.73-.635-3.985a.75.75 0 00-.722-.516l-.143.001c-2.996 0-5.717-1.17-7.734-3.08zm3.094 8.016a.75.75 0 10-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 00-1.06 1.06l2.25 2.25a.75.75 0 001.14-.094l3.75-5.25z" clip-rule="evenodd" />
+                        </svg>`
+                    },
+                    {
+                        id: 2,
+                        isShown: true,
+                        title: 'Checkout 100% seguro',
+                        body: 'As informações desta compra são criptografadas.',
+                        icon: `
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                            <path fill-rule="evenodd" d="M12 1.5a5.25 5.25 0 00-5.25 5.25v3a3 3 0 00-3 3v6.75a3 3 0 003 3h10.5a3 3 0 003-3v-6.75a3 3 0 00-3-3v-3c0-2.9-2.35-5.25-5.25-5.25zm3.75 8.25v-3a3.75 3.75 0 10-7.5 0v3h7.5z" clip-rule="evenodd" />
+                        </svg>`
+                    },
+                ],
+
+                List: {
+                    title: 'O que você irá aprender com este curso:',
+                    ul: [
+                        { li: 'Como se tornar um profissional altamente requisitado no mercado.' },
+                        { li: 'Aprenda técnicas que irão decolar a sua carreira.' },
+                        { li: 'Conquiste um salário de até R$7.072,84 na sua área.' },
+                        { li: 'Saiba como ser promovido a função que você tanto almeja.' }
+                    ]
                 },
 
-            ],
+
+            },
 
             Classes: {
-                checkoutLeftColumn: 'pt-6 pb-8 lg:pb-10 px-3 flex flex-col gap-4',
-                checkoutRightColumn: 'xl:pt-6 pb-12 px-3 flex flex-col gap-3',
+                checkoutLeftColumn: 'w-full max-w-3xl mx-auto pt-6 pb-8 lg:pb-10 px-3 flex flex-col gap-4',
+                checkoutRightColumn: 'xl:pt-6 pb-12 px-3 flex flex-col gap-5',
                 input: 'border border-slate-300 text-gray-700 text-sm bg-white placeholder-gray-400 focus:border-indigo-400 input-shadow w-full rounded-md py-2 px-3 font-medium outline-none transition duration-500 focus:ring0 disabled:cursor-default disabled:bg-[#F5F7FD]',
                 inputHasIcon: 'border border-slate-300 text-gray-700 text-sm bg-white placeholder-gray-400 focus:border-indigo-400 input-shadow w-full rounded-md py-2 pr-3 pl-8 font-medium outline-none transition duration-500 focus:ring-0 disabled:cursor-default disabled:bg-[#F5F7FD]',
                 label: 'block text-sm font-medium text-slate-600 mb-1',
@@ -91,6 +106,19 @@ export default {
                     default: 'text-sm bg-white flex flex-col lg:flex-row items-center lg:justify-start justify-center gap-1 w-[29%] lg:w-1/6 px-4 py-2.5 lg:py-4 font-semibold rounded-md border hover:border-indigo-600 hover:text-indigo-500 transition duration-300',
                     selected: 'border-indigo-600 text-indigo-500',
                     notSelected: 'border-slate-400 text-gray-500 opacity-70 grayscale',
+                },
+                pixTab: {
+                    titleWrapper: 'flex items-center justify-start gap-1 text-base tracking-tight font-bold text-[#33bcad] mb-1',
+                    secondaryText: 'block text-xs text-gray-500 mb-4 font-medium'
+                },
+                orderBump: {
+                    label: 'w-full flex flex-col grow-1 rounded-md border-2 border-dashed border-red-600 hover:border-red-500 hover:shadow-lg transition duration-500 cursor-pointer',
+                    titleWrapper: 'w-full bg-gray-200 flex items-center justify-center gap-1 px-3 py-2.5 rounded-t-md',
+                    title: 'text-slate-900 text-base tracking-tight font-bold',
+                    bodyWrapper: 'bg-slate-50 px-3 pt-4 pb-5 lg:px-4 flex gap-3 flex-row items-start rounded-b',
+                    checkbox: 'w-4 h-4 lg:w-5 lg:h-5 mt-[2px] rounded orderbump-checkbox ring-0 outline-none focus:ring-0 focus:ring-offset-0',
+                    image: 'aspect-square block rounded w-12 h-12 object-cover shadow-lg',
+
                 }
             },
 
@@ -144,6 +172,28 @@ export default {
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
                 </svg>`,
+
+                pixLiClock: `
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>`,
+
+                pixLiQRCode: `
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5">
+                    <path fill-rule="evenodd" d="M3.75 2A1.75 1.75 0 002 3.75v3.5C2 8.216 2.784 9 3.75 9h3.5A1.75 1.75 0 009 7.25v-3.5A1.75 1.75 0 007.25 2h-3.5zM3.5 3.75a.25.25 0 01.25-.25h3.5a.25.25 0 01.25.25v3.5a.25.25 0 01-.25.25h-3.5a.25.25 0 01-.25-.25v-3.5zM3.75 11A1.75 1.75 0 002 12.75v3.5c0 .966.784 1.75 1.75 1.75h3.5A1.75 1.75 0 009 16.25v-3.5A1.75 1.75 0 007.25 11h-3.5zm-.25 1.75a.25.25 0 01.25-.25h3.5a.25.25 0 01.25.25v3.5a.25.25 0 01-.25.25h-3.5a.25.25 0 01-.25-.25v-3.5zm7.5-9c0-.966.784-1.75 1.75-1.75h3.5c.966 0 1.75.784 1.75 1.75v3.5A1.75 1.75 0 0116.25 9h-3.5A1.75 1.75 0 0111 7.25v-3.5zm1.75-.25a.25.25 0 00-.25.25v3.5c0 .138.112.25.25.25h3.5a.25.25 0 00.25-.25v-3.5a.25.25 0 00-.25-.25h-3.5zm-7.26 1a1 1 0 00-1 1v.01a1 1 0 001 1h.01a1 1 0 001-1V5.5a1 1 0 00-1-1h-.01zm9 0a1 1 0 00-1 1v.01a1 1 0 001 1h.01a1 1 0 001-1V5.5a1 1 0 00-1-1h-.01zm-9 9a1 1 0 00-1 1v.01a1 1 0 001 1h.01a1 1 0 001-1v-.01a1 1 0 00-1-1h-.01zm9 0a1 1 0 00-1 1v.01a1 1 0 001 1h.01a1 1 0 001-1v-.01a1 1 0 00-1-1h-.01zm-3.5-1.5a1 1 0 011-1H12a1 1 0 011 1v.01a1 1 0 01-1 1h-.01a1 1 0 01-1-1V12zm6-1a1 1 0 00-1 1v.01a1 1 0 001 1H17a1 1 0 001-1V12a1 1 0 00-1-1h-.01zm-1 6a1 1 0 011-1H17a1 1 0 011 1v.01a1 1 0 01-1 1h-.01a1 1 0 01-1-1V17zm-4-1a1 1 0 00-1 1v.01a1 1 0 001 1H12a1 1 0 001-1V17a1 1 0 00-1-1h-.01z" clip-rule="evenodd" />
+                </svg>`,
+
+                pixLiShield: `
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5">
+                    <path fill-rule="evenodd" d="M9.661 2.237a.531.531 0 01.678 0 11.947 11.947 0 007.078 2.749.5.5 0 01.479.425c.069.52.104 1.05.104 1.59 0 5.162-3.26 9.563-7.834 11.256a.48.48 0 01-.332 0C5.26 16.564 2 12.163 2 7c0-.538.035-1.069.104-1.589a.5.5 0 01.48-.425 11.947 11.947 0 007.077-2.75zm4.196 5.954a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z" clip-rule="evenodd" />
+                </svg>`,
+
+                orderBumpArrow: `
+                <svg version="1.0" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 690 512" preserveAspectRatio="xMidYMid meet" class="text-[#dc2626] w-8 pb-[0.15rem]" fill="currentColor">
+                    <g xmlns="http://www.w3.org/2000/svg">
+                        <path d="m596.39 279.65c-0.0625-3.1133-1.4961-6.1758-3.8516-8.2227l-156.8-134.33c-3.2383-2.8125-8.1562-3.5117-12.051-1.7148-3.8945 1.7969-6.5469 5.9961-6.5 10.285v67.164h-302.39c-5.8633 0-11.199 5.332-11.199 11.195v111.94c0 5.8594 5.3359 11.191 11.199 11.195h302.39v67.164c-0.042968 4.2852 2.6055 8.4844 6.5 10.285 3.8945 1.7969 8.8125 1.0977 12.051-1.7148l156.8-134.32c2.5312-2.1953 3.9883-5.5742 3.8516-8.918z"></path>
+                    </g>
+                </svg>`,
             }
         }
     },
@@ -161,18 +211,18 @@ export default {
 </script>
 
 <template>
-    <div class="h-10 w-full flex gap-2 lg:gap-3 items-center justify-center bg-slate-800 px-4">
+    <!-- Top message -->
+    <div class="w-full flex gap-2 lg:gap-3 items-center justify-center bg-slate-800 px-4 py-2.5">
         <div class="rounded-full w-4 h-4 lg:w-5 lg:h-5 aspect-square bg-green-600 text-white flex items-center justify-center">
             <div v-html="icons.lock" class="w-2.5 h-2.5 lg:w-3 lg:h-3"></div>
         </div>
         <span class="text-white text-xs lg:text-sm font-bold uppercase tracking-wide">Este é um ambiente 100% seguro.</span>
     </div>
 
-
     <div id="checkout-container" class="w-full flex flex-col xl:flex-row xl:justify-center">
 
-        <!-- Left Column -->
-        <div :class="[checkoutHas2Columns ? 'w-full xl:w-2/3 xl:px-6 max-w-3xl' : 'w-full max-w-3xl mx-auto', Classes.checkoutLeftColumn]">
+        <!-- Checkout Left Column -->
+        <div :class="[checkoutHas2Columns ? 'xl:mx-0 xl:w-2/3 xl:px-6' : '', Classes.checkoutLeftColumn]">
             <!-- Checkout Banner -->
             <img :src="BannerImg" class="w-full rounded-lg" />
             <!-- Payment form container -->
@@ -328,40 +378,32 @@ export default {
                 <!-- End Credit card Tab -->
 
                 <!-- PIX Tab -->
-                <div class="lg:col-span-2 my-2" v-show="tab === 2">
+                <div class="lg:col-span-2 mt-2" v-show="tab === 2">
                     <span class="block text-base font-semibold text-slate-600 mb-4">
                         Pague no PIX
                     </span>
 
-                    <span class="flex items-center justify-start gap-1 text-base font-bold text-[#33bcad] mb-1">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
-                        </svg>
+                    <span :class="Classes.pixTab.titleWrapper">
+                        <div v-html="icons.pixLiClock"></div>
                         Imediato
                     </span>
-                    <span class="block text-xs text-gray-500 mb-4 font-medium">
+                    <span :class="Classes.pixTab.secondaryText">
                         Ao selecionar a opção Gerar Pix, o código para pagamento estará disponível.
                     </span>
 
-                    <span class="flex items-center justify-start gap-1 text-base font-bold text-[#33bcad] mb-1">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5">
-                            <path fill-rule="evenodd"
-                                d="M3.75 2A1.75 1.75 0 002 3.75v3.5C2 8.216 2.784 9 3.75 9h3.5A1.75 1.75 0 009 7.25v-3.5A1.75 1.75 0 007.25 2h-3.5zM3.5 3.75a.25.25 0 01.25-.25h3.5a.25.25 0 01.25.25v3.5a.25.25 0 01-.25.25h-3.5a.25.25 0 01-.25-.25v-3.5zM3.75 11A1.75 1.75 0 002 12.75v3.5c0 .966.784 1.75 1.75 1.75h3.5A1.75 1.75 0 009 16.25v-3.5A1.75 1.75 0 007.25 11h-3.5zm-.25 1.75a.25.25 0 01.25-.25h3.5a.25.25 0 01.25.25v3.5a.25.25 0 01-.25.25h-3.5a.25.25 0 01-.25-.25v-3.5zm7.5-9c0-.966.784-1.75 1.75-1.75h3.5c.966 0 1.75.784 1.75 1.75v3.5A1.75 1.75 0 0116.25 9h-3.5A1.75 1.75 0 0111 7.25v-3.5zm1.75-.25a.25.25 0 00-.25.25v3.5c0 .138.112.25.25.25h3.5a.25.25 0 00.25-.25v-3.5a.25.25 0 00-.25-.25h-3.5zm-7.26 1a1 1 0 00-1 1v.01a1 1 0 001 1h.01a1 1 0 001-1V5.5a1 1 0 00-1-1h-.01zm9 0a1 1 0 00-1 1v.01a1 1 0 001 1h.01a1 1 0 001-1V5.5a1 1 0 00-1-1h-.01zm-9 9a1 1 0 00-1 1v.01a1 1 0 001 1h.01a1 1 0 001-1v-.01a1 1 0 00-1-1h-.01zm9 0a1 1 0 00-1 1v.01a1 1 0 001 1h.01a1 1 0 001-1v-.01a1 1 0 00-1-1h-.01zm-3.5-1.5a1 1 0 011-1H12a1 1 0 011 1v.01a1 1 0 01-1 1h-.01a1 1 0 01-1-1V12zm6-1a1 1 0 00-1 1v.01a1 1 0 001 1H17a1 1 0 001-1V12a1 1 0 00-1-1h-.01zm-1 6a1 1 0 011-1H17a1 1 0 011 1v.01a1 1 0 01-1 1h-.01a1 1 0 01-1-1V17zm-4-1a1 1 0 00-1 1v.01a1 1 0 001 1H12a1 1 0 001-1V17a1 1 0 00-1-1h-.01z"
-                                clip-rule="evenodd" />
-                        </svg>
+                    <span :class="Classes.pixTab.titleWrapper">
+                        <div v-html="icons.pixLiQRCode"></div>
                         Pagamento simples
                     </span>
-                    <span class="block text-xs text-gray-500 mb-4 font-medium">
+                    <span :class="Classes.pixTab.secondaryText">
                         Basta abrir o aplicativo do seu banco, procurar pelo PIX e escanear o QRcode.
                     </span>
 
-                    <span class="flex items-center justify-start gap-1 text-base font-bold text-[#33bcad] mb-1">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5">
-                            <path fill-rule="evenodd" d="M9.661 2.237a.531.531 0 01.678 0 11.947 11.947 0 007.078 2.749.5.5 0 01.479.425c.069.52.104 1.05.104 1.59 0 5.162-3.26 9.563-7.834 11.256a.48.48 0 01-.332 0C5.26 16.564 2 12.163 2 7c0-.538.035-1.069.104-1.589a.5.5 0 01.48-.425 11.947 11.947 0 007.077-2.75zm4.196 5.954a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z" clip-rule="evenodd" />
-                        </svg>
+                    <span :class="Classes.pixTab.titleWrapper">
+                        <div v-html="icons.pixLiShield"></div>
                         100% Seguro
                     </span>
-                    <span class="block text-xs text-gray-500 mb-4 font-medium">
+                    <span :class="Classes.pixTab.secondaryText">
                         O pagamento com PIX foi desenvolvido pelo Banco Central para facilitar suas compras.
                     </span>
                 </div>
@@ -372,6 +414,36 @@ export default {
                     Boleto bancário
                 </div>
                 <!-- End Billet Tab -->
+
+                <div class="lg:col-span-2 my-2">
+
+                    <!-- Order bump -->
+                    <label :class="Classes.orderBump.label">
+                        <span :class="Classes.orderBump.titleWrapper">
+                            <div v-html="icons.orderBumpArrow"></div>
+                            <span :class="Classes.orderBump.title">
+                                Sim, quero levar também!
+                            </span>
+                        </span>
+
+                        <div :class="Classes.orderBump.bodyWrapper">
+                            <input type="checkbox" :class="Classes.orderBump.checkbox" />
+                            <img :src="OrderBump01" :class="Classes.orderBump.image" />
+                            <div>
+                                <span class="block text-slate-800 text-base tracking-tight font-bold -mt-[3px]">
+                                    Seja um Chef Foda!
+                                </span>
+                                <span class="block text-slate-600 text-sm font-medium mt-1">
+                                    Compre este curso e aprenda todas as receitas que você sempre quis. Para amadores e profissionais que desejam aprender dotes culinários e crescer seu negócio.
+                                </span>
+                                <span class="block text-slate-500 text-xs font-medium mt-2">
+                                    De <span class="line-through">R$ 899,90</span> por R$ 97,00
+                                </span>
+                            </div>
+                        </div>
+                    </label>
+                    <!-- End Order bump -->
+                </div>
 
                 <!-- Buy Button -->
                 <div class="lg:col-span-2">
@@ -405,30 +477,54 @@ export default {
             </div>
         </div>
 
-        <!-- Right column -->
-        <div v-if="checkoutHas2Columns" :class="['w-full xl:w-1/3 max-w-lg xl:pl-5 xl:border-l xl:border-zinc-200', Classes.checkoutRightColumn]">
+        <!-- Checkout Right column -->
+        <div v-if="checkoutHas2Columns" :class="['max-w-xl mx-auto xl:mx-0 w-full xl:w-1/3 xl:pl-5 xl:border-l xl:border-zinc-200', Classes.checkoutRightColumn]">
 
-            <!-- Checkout badges -->
-            <template v-for="badge in CheckoutBadges">
-                <div v-if="badge.isShown" class="flex items-center justify-start gap-2 rounded-md bg-white px-3 py-3.5 lg:px-3.5 border border-zinc-300">
-                    <span v-html="badge.icon" class="w-5 h-5 text-indigo-500"></span>
-                    <div>
-                        <span class="block text-base font-bold text-slate-600 tracking-tighter">
-                            {{ badge.title }}
-                        </span>
-                        <span class="block text-xs font-medium text-gray-400">
-                            {{ badge.body }}
-                        </span>
+            <!-- Checkout List -->
+            <div v-if="Elements.List && Elements.List !== []" class="flex flex-col items-start justify-start gap-2 rounded-md bg-[#eff4f9] px-3 py-4 lg:px-3.5 border border-indigo-400">
+                <span class="text-base text-indigo-600 font-semibold tracking-tight block mb-2">
+                    {{ Elements.List.title }}
+                </span>
+                <template v-for="ul in Elements.List.ul">
+                    <li class="flex items-center justify-start gap-2 text-sm font-medium text-gray-700 leading-5">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" stroke="currentColor" stroke-width="1.5" class="w-4 h-4 shrink-0 text-green-500">
+                            <path fill-rule="evenodd" d="M16.704 4.153a.75.75 0 01.143 1.052l-8 10.5a.75.75 0 01-1.127.075l-4.5-4.5a.75.75 0 011.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 011.05-.143z" clip-rule="evenodd" />
+                        </svg>
+                        {{ ul.li }}
+                    </li>
+                </template>
+            </div>
+
+            <!-- Checkout Badges -->
+            <div v-if="Elements.Badges && Elements.Badges !== []" class="flex flex-col gap-2">
+                <div v-for="badge in Elements.Badges">
+                    <div v-if="badge.isShown" class="flex items-center justify-start gap-2 rounded-md bg-white px-3 py-3.5 lg:px-3.5 border border-zinc-300">
+                        <span v-html="badge.icon" class="w-5 h-5 text-indigo-500"></span>
+                        <div>
+                            <span class="block text-base lg:text-sm font-bold text-slate-600 tracking-tighter">
+                                {{ badge.title }}
+                            </span>
+                            <span class="block text-xs font-medium text-gray-400">
+                                {{ badge.body }}
+                            </span>
+                        </div>
                     </div>
                 </div>
-            </template>
+            </div>
 
-            <div class="mt-4 flex flex-col gap-3">
-                <span class="text-xs text-gray-400 block">
+            <!-- Footer disclaimer -->
+            <div class="mt-4 flex flex-col gap-3 xl:gap-2">
+                <span class="text-xs text-gray-500 block">
                     Esta compra é processada por Pepper Tecnologia e Pagamentos Ltda. *Taxa de 2,99% a.m.
-                    <a href="#" class="text-xs text-gray-400 hover:text-indigo-500 transition duration-500">Termos de uso e privacidade</a>
                 </span>
-                <span class="text-xs text-gray-400 block">Dúvidas? Entre em contato com o produtor: <a href="mailto:contato@produtor" class="text-xs ml-1 underline text-gray-500 font-medium hover:text-indigo-500 transition duration-500">contato@produtor.uy</a></span>
+                <span class="text-xs text-gray-500 block">
+                    Ao continuar nesta compra, você concorda com os
+                    <a href="#" class="text-gray-600 hover:text-indigo-600 transition duration-500">Termos de uso e privacidade</a>
+                </span>
+                <span class="text-xs text-gray-500 block">
+                    Dúvidas? Entre em contato com o produtor:
+                    <a href="mailto:contato@produtor" class="text-xs md:ml-1 underline text-gray-600 font-medium hover:text-indigo-500 transition duration-500">contato@produtor.uy</a>
+                </span>
             </div>
 
         </div>
@@ -484,7 +580,6 @@ body,
 html,
 :root {
     --prealoder-border: rgb(60 162 110);
-    /* background-color: #e8e8e8; */
     background-color: #fff;
     color: #999;
 }
@@ -496,12 +591,17 @@ svg {
 #buyBtn {
     box-shadow: inset 0 -3px 0px 0px rgb(0, 0, 0, 0.1);
     padding: 0.75rem 1.25rem 0.9rem 1.25rem;
-    /* background: #466ee5; */
     background: #1fae39;
 }
 
 .input-shadow:focus {
     box-shadow: rgb(229, 229, 251) 0px 2px 0.25rem 0px !important
+}
+
+.orderbump-checkbox {
+    cursor: pointer;
+    color: #6366f1;
+    transition: background-color .15s ease-in-out, background-position .15s ease-in-out, border-color .15s ease-in-out, box-shadow .15s ease-in-out;
 }
 
 /* Loader animation */
