@@ -385,10 +385,7 @@ input[type='radio']{
 
 input[type="checkbox"]{
   cursor: pointer;
-  width: 0.95rem;
-  height: 0.95rem;
   color: #6366f1;
-  background-color: rgb(24, 24, 27);
 }
 
 .pepper-loading {
