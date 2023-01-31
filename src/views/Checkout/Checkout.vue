@@ -31,6 +31,9 @@ const installment = [
 ];
 const selectedInstallment = ref(installment[11]);
 
+
+const expirationYear = ref(null);
+const expirationMonth = ref(null);
 </script>
 
 <script type="text/javascript">
@@ -104,7 +107,7 @@ export default {
                     text: 'text-base font-semibold text-slate-700'
                 },
                 tabs: {
-                    default: 'text-sm bg-white flex flex-col lg:flex-row items-center lg:justify-start justify-center gap-1 w-[29%] lg:w-1/6 px-4 py-2.5 lg:py-4 font-semibold rounded-md border hover:border-indigo-600 hover:text-indigo-500 transition duration-300',
+                    default: 'text-sm bg-white flex flex-col lg:flex-row items-center lg:justify-start justify-center gap-1 lg:gap-[0.35rem] w-[29%] lg:w-1/6 px-4 py-2.5 lg:py-4 font-semibold rounded-md border hover:border-indigo-600 hover:text-indigo-500 transition duration-300',
                     selected: 'border-indigo-600 text-indigo-500',
                     notSelected: 'border-slate-400 text-gray-500 opacity-70 grayscale',
                 },
@@ -113,7 +116,7 @@ export default {
                     secondaryText: 'block text-xs text-gray-500 mb-4 font-medium'
                 },
                 orderBump: {
-                    label: 'w-full flex flex-col grow-1 rounded-md mb-2 border-2 border-dashed border-red-600 hover:border-red-500 hover:shadow-lg transition duration-500 cursor-pointer',
+                    label: 'w-full flex flex-col grow-1 rounded-md mb-3 border-2 border-dashed border-red-600 hover:border-red-500 hover:shadow-lg transition duration-500 cursor-pointer',
                     titleWrapper: 'w-full bg-gray-200 flex items-center justify-center gap-1 px-3 py-2.5 rounded-t-md',
                     title: 'text-slate-900 text-base tracking-tight font-bold italic',
                     bodyWrapper: 'bg-zinc-50 px-3 pt-4 pb-5 lg:px-4 flex gap-3 flex-row items-start rounded-b',
@@ -197,6 +200,36 @@ export default {
                         <path d="m596.39 279.65c-0.0625-3.1133-1.4961-6.1758-3.8516-8.2227l-156.8-134.33c-3.2383-2.8125-8.1562-3.5117-12.051-1.7148-3.8945 1.7969-6.5469 5.9961-6.5 10.285v67.164h-302.39c-5.8633 0-11.199 5.332-11.199 11.195v111.94c0 5.8594 5.3359 11.191 11.199 11.195h302.39v67.164c-0.042968 4.2852 2.6055 8.4844 6.5 10.285 3.8945 1.7969 8.8125 1.0977 12.051-1.7148l156.8-134.32c2.5312-2.1953 3.9883-5.5742 3.8516-8.918z"></path>
                     </g>
                 </svg>`,
+            },
+
+
+            CreditCard: {
+                expYear: [
+                    { year: 2023 },
+                    { year: 2024 },
+                    { year: 2025 },
+                    { year: 2026 },
+                    { year: 2027 },
+                    { year: 2028 },
+                    { year: 2029 },
+                    { year: 2030 },
+                    { year: 2031 },
+                    { year: 2032 }
+                ],
+                expMonth: [
+                    { month: 1 },
+                    { month: 2 },
+                    { month: 3 },
+                    { month: 4 },
+                    { month: 5 },
+                    { month: 6 },
+                    { month: 7 },
+                    { month: 8 },
+                    { month: 9 },
+                    { month: 10 },
+                    { month: 11 },
+                    { month: 12 }
+                ]
             },
 
             OrderBumpProducts: [
@@ -332,19 +365,25 @@ export default {
                     <button
                         @click="paymentCreditCard"
                         :class="[Classes.tabs.default, tab == 1 ? Classes.tabs.selected : Classes.tabs.notSelected]">
-                        <span v-html="icons.card" class='w-5 h-5'></span>
+                        <div class="inline-flex items-center justify-center lg:justify-start h-6 w-auto">
+                            <span v-html="icons.card" class='w-6'></span>
+                        </div>
                         Cartão
                     </button>
                     <button
                         @click="paymentPix"
                         :class="[Classes.tabs.default, tab == 2 ? Classes.tabs.selected : Classes.tabs.notSelected]">
-                        <span v-html="icons.pix" class='w-5 h-5'></span>
+                        <div class="inline-flex items-center justify-center lg:justify-start h-6 w-auto">
+                            <span v-html="icons.pix" class='w-5'></span>
+                        </div>
                         PIX
                     </button>
                     <button
                         @click="paymentBillet"
                         :class="[Classes.tabs.default, tab == 3 ? Classes.tabs.selected : Classes.tabs.notSelected]">
-                        <span v-html="icons.billet" class='w-5 h-5'></span>
+                        <div class="inline-flex items-center justify-center lg:justify-start h-6 w-auto">
+                            <img class="w-7" src="https://img6.wsimg.com/fos/react/icons/115/gd/sprite.svg#boleto" />
+                        </div>
                         Boleto
                     </button>
                 </div>
@@ -373,8 +412,14 @@ export default {
                         <label :class="Classes.label">
                             Mês:
                         </label>
-                        <div :class="Classes.containerInputIcon">
-                            <input :class="Classes.input" required inputmode="text" type="text" />
+                        <div class="relative w-full">
+                            <select required :class="Classes.input" v-model="expirationMonth">
+                                <template v-for="m in CreditCard.expMonth">
+                                    <option :value="(m.month).toString().padStart(2, '0')">{{ (m.month).toString().padStart(2, '0') }}</option>
+                                </template>
+                            </select>
+                            <!-- 'Placeholder' -->
+                            <span v-if="!expirationMonth" class="absolute block z-2 top-0 left-0 text-sm h-full px-3 flex items-center text-gray-400">Mês</span>
                         </div>
                     </div>
 
@@ -382,18 +427,15 @@ export default {
                         <label :class="Classes.label">
                             Ano:
                         </label>
-                        <select required :class="[Classes.input,]" class="disabled:opacity-40">
-                            <option selected disabled>Ano</option>
-                            <option value="2023">2023</option>
-                            <option value="2024">2024</option>
-                            <option value="2025">2025</option>
-                            <option value="2026">2026</option>
-                            <option value="2027">2027</option>
-                            <option value="2028">2028</option>
-                            <option value="2029">2029</option>
-                            <option value="2030">2030</option>
-                            <option value="2031">2031</option>
-                        </select>
+                        <div class="relative w-full">
+                            <select required :class="Classes.input" v-model="expirationYear">
+                                <template v-for="y in CreditCard.expYear">
+                                    <option :value="y.year">{{ y.year }}</option>
+                                </template>
+                            </select>
+                            <!-- 'Placeholder' -->
+                            <span v-if="!expirationYear" class="absolute block z-2 top-0 left-0 text-sm h-full px-3 flex items-center text-gray-400">Ano</span>
+                        </div>
                     </div>
 
                     <div class="col-span-1">
@@ -402,7 +444,7 @@ export default {
                         </label>
                         <div :class="Classes.containerInputIcon">
                             <input :class="Classes.inputHasIcon" required maxlength="4" inputmode="tel" type="text" />
-                            <div v-html="icons.lock" class="w-4 absolute top-0 left-0 h-[36px] flex items-center justify-center mx-2 text-slate-500"></div>
+                            <div v-html="icons.lock" class="w-4 absolute top-0 left-0 h-[36px] flex items-center justify-center mx-2 text-slate-500 z-10"></div>
                         </div>
                     </div>
 
