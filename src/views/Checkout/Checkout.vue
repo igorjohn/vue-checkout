@@ -556,6 +556,17 @@ export default {
                     <!-- End Order bump -->
                 </div>
 
+                <div class="lg:col-span-2">
+                    <span class="text-base text-indigo-600 font-bold tracking-tight block mb-2">
+                        Valor total: 12x de R$ 22,70 no cartão
+                    </span>
+
+                    <!-- 
+                        ou R$ 197,00 à vista
+                     -->
+
+                </div>
+
                 <!-- Buy Button -->
                 <div class="lg:col-span-2">
                     <button id="buyBtn" :class="Classes.button" @click="onPurchase">
@@ -592,8 +603,8 @@ export default {
         <div v-if="checkoutHas2Columns" :class="['max-w-xl mx-auto xl:mx-0 w-full xl:w-1/3 xl:pl-5 xl:border-l xl:border-zinc-200', Classes.checkoutRightColumn]">
 
             <!-- Checkout List -->
-            <div v-if="Elements.List && Elements.List !== []" class="flex flex-col items-start justify-start gap-2 rounded-md bg-[#eff4f9] px-3 py-4 lg:px-3.5 border border-indigo-400">
-                <span class="text-base text-indigo-600 font-semibold tracking-tight block mb-2">
+            <div v-if="Elements.List && Elements.List !== []" class="flex flex-col items-start justify-start gap-2 rounded-md bg-[#eff4f9] px-3.5 py-4 lg:px-4 border border-indigo-400">
+                <span class="text-base text-indigo-600 font-bold tracking-tight block mb-2">
                     {{ Elements.List.title }}
                 </span>
                 <template v-for="ul in Elements.List.ul">
