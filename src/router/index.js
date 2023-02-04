@@ -1,6 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router';
-import CheckoutView from '../views/Checkout/Checkout.vue';
-import CheckoutBuilderView from '../views/Checkout/Builder.vue';
+import CheckoutView from '@/views/Checkout/Checkout.vue';
+import CheckoutBuilderView from '@/views/Checkout/Builder.vue';
 
 const routes = [
   {
