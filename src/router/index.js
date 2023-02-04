@@ -1,8 +1,11 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import CheckoutView from '@/views/Checkout/Checkout.vue';
-import CheckoutBuilderView from '@/views/Checkout/Builder.vue';
+import CheckoutBuilderView from '@/views/CheckoutBuilder/Builder.vue';
 
 const routes = [
+  {
+    path: '/:catchAll(.*)', redirect: 'checkout'
+  },
   {
     path: '/checkout',
     name: 'Checkout',

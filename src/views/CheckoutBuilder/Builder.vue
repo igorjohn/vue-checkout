@@ -2,8 +2,9 @@
 
 import { ref } from "vue";
 
-import { TransitionRoot, TransitionChild, Dialog, DialogPanel } from '@headlessui/vue'
-
+import { TransitionRoot, TransitionChild, Dialog, DialogPanel } from '@headlessui/vue';
+import { ComputerDesktopIcon, DevicePhoneMobileIcon } from '@heroicons/vue/20/solid';
+/* import { ComputerDesktopIcon } from '@heroicons/vue/24/outline'; */
 
 let openLoader = ref(false);
 function onPurchase() {
@@ -25,8 +26,8 @@ import OrderBump01 from '@/assets/img/mock/orderbump-01.jpeg';
 import OrderBump02 from '@/assets/img/mock/orderbump-02.jpeg';
 
 // Components
-import CheckoutFormPlaceholder from "@/components/CheckoutFormPlaceholder.vue";
-import CheckoutBuilderSidebar from "@/components/CheckoutBuilderSidebar.vue";
+import CheckoutFormPlaceholder from "@/components/CheckoutBuilder/CheckoutFormPlaceholder.vue";
+import CheckoutBuilderSidebar from "@/components/CheckoutBuilder/CheckoutBuilderSidebar.vue";
 
 
 
@@ -117,11 +118,6 @@ export default {
                     </g>
                 </svg>`,
 
-                chevronDown: `
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
-                </svg>`,
-
                 orderBumpArrow: `
                 <svg version="1.0" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 690 512" preserveAspectRatio="xMidYMid meet" class="text-[#dc2626] w-8 pb-[0.15rem]" fill="currentColor">
                     <g xmlns="http://www.w3.org/2000/svg">
@@ -196,19 +192,14 @@ export default {
                     @click="changePreviewMode('desktop')"
                     class="px-3 py-2 text-xs font-medium border cursor-pointer rounded-l-md transition duration-500 hover:bg-indigo-600 hover:border-indigo-600 border-r-0 inline-flex items-center gap-1"
                     :class="[preview === 'desktop' ? 'text-white border-indigo-500 bg-indigo-500' : 'text-gray-50 border-indigo-500 bg-transparent']">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-3.5 h-3.5">
-                        <path fill-rule="evenodd" d="M2 4.25A2.25 2.25 0 014.25 2h11.5A2.25 2.25 0 0118 4.25v8.5A2.25 2.25 0 0115.75 15h-3.105a3.501 3.501 0 001.1 1.677A.75.75 0 0113.26 18H6.74a.75.75 0 01-.484-1.323A3.501 3.501 0 007.355 15H4.25A2.25 2.25 0 012 12.75v-8.5zm1.5 0a.75.75 0 01.75-.75h11.5a.75.75 0 01.75.75v7.5a.75.75 0 01-.75.75H4.25a.75.75 0 01-.75-.75v-7.5z" clip-rule="evenodd" />
-                    </svg>
+                    <ComputerDesktopIcon class="w-3.5 h-3.5" />
                     Desktop
                 </button>
                 <button
                     @click="changePreviewMode('mobile')"
                     class="px-3 py-2 text-xs font-medium border cursor-pointer rounded-r-md transition duration-500 hover:bg-indigo-600 hover:border-indigo-600 border-l-0 inline-flex items-center gap-1"
                     :class="[preview === 'mobile' ? 'text-white border-indigo-500 bg-indigo-500' : 'text-gray-50 border-indigo-500 bg-transparent']">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-3.5 h-3.5">
-                        <path d="M8 16.25a.75.75 0 01.75-.75h2.5a.75.75 0 010 1.5h-2.5a.75.75 0 01-.75-.75z" />
-                        <path fill-rule="evenodd" d="M4 4a3 3 0 013-3h6a3 3 0 013 3v12a3 3 0 01-3 3H7a3 3 0 01-3-3V4zm4-1.5v.75c0 .414.336.75.75.75h2.5a.75.75 0 00.75-.75V2.5h1A1.5 1.5 0 0114.5 4v12a1.5 1.5 0 01-1.5 1.5H7A1.5 1.5 0 015.5 16V4A1.5 1.5 0 017 2.5h1z" clip-rule="evenodd" />
-                    </svg>
+                    <DevicePhoneMobileIcon class="w-3.5 h-3.5" />
                     Mobile
                 </button>
             </div>

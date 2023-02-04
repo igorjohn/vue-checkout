@@ -1,5 +1,5 @@
 <script setup>
-import { ChevronRightIcon, ChevronLeftIcon } from '@heroicons/vue/20/solid'
+import { ChevronRightIcon, ChevronDoubleLeftIcon } from '@heroicons/vue/20/solid'
 </script>
 
 
@@ -105,9 +105,7 @@ export default {
     },
 
     methods: {
-        changeTab(e) {
-            this.tab = e;
-        },
+        changeTab(tab) { this.tab = tab; },
     },
 
 };
@@ -139,13 +137,20 @@ export default {
                 class="flex items-center justify-start gap-2 text-sm text-indigo-500 font-semibold cursor-pointer mb-3"
                 v-if="tab !== 'TabMain'"
                 @click="changeTab('TabMain')">
-                <ChevronLeftIcon class="w-3.5 h-3.5" />
+                <ChevronDoubleLeftIcon class="w-3.5 h-3.5" />
                 Voltar
             </div>
 
             <!-- Tab Image -->
             <div class="w-full flex flex-col gap-2 mx-auto" v-show="tab === 'TabImage'">
-                Adicionar imagem
+
+                <div class="flex items-center justify-start gap-2 grow">
+                    <div v-html="SidebarMenu[0].svg" class="w-5 h-5 inline-flex items-center text-slate-500"></div>
+                    <span class="font-semibold text-[15px] tracking-tight text-slate-600">
+                        Adicionar imagem
+                    </span>
+                </div>
+
             </div>
 
             <!-- Tab Whatsapp -->
