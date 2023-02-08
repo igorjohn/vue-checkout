@@ -66,18 +66,10 @@ import { ShoppingBagIcon } from '@heroicons/vue/24/outline';
             <div class="h-8 bg-slate-50 border border-slate-200 rounded"></div>
         </div>
 
-        <!-- Button -->
-        <div class="col-span-6 mb-2 mt-1 flex items-center justify-center rounded-md py-3 bg-green-700 opacity-30 text-green-200  text-base tracking-tight font-bold">
-            Comprar agora
-        </div>
-        <div class="col-span-6 space-y-2 my-1">
-            <div class="h-2 bg-slate-100 mx-auto w-[40%]"></div>
-        </div>
-
         <!-- Hover -->
         <div class="absolute gap-4 z-10 top-0 left-0 w-full h-full flex flex-col justify-center items-center rounded bg-slate-50 bg-opacity-80 border-2 border-dashed border-indigo-500 opacity-0 hover:opacity-100 transition duration-700">
             <ShoppingBagIcon class="w-7 h-7 text-indigo-600" />
-            <span class="block text-lg font-semibold text-indigo-500 tracking-tight">Aqui será exibido o formulário de compra.</span>
+            <span class="block text-lg font-semibold text-indigo-500 tracking-tight text-center">Aqui será exibido o formulário de compra.</span>
         </div>
     </div>
 </template>

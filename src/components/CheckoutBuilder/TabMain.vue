@@ -1,42 +1,13 @@
 <script setup>
-import { ChevronRightIcon, ChevronDoubleLeftIcon } from '@heroicons/vue/20/solid'
+
+import { ChevronRightIcon } from '@heroicons/vue/20/solid'
+
 </script>
 
-
-<script>
-import draggable from "vuedraggable";
-
+<script type="text/javascript">
 export default {
-    name: "clone",
-    display: "Clone",
-    order: 2,
-    components: {
-        draggable,
-    },
     data() {
         return {
-
-            tab: 'TabMain',
-
-            enabled: true,
-            checkoutElements: [
-                {
-                    name: "John",
-                    id: 1
-                },
-                { name: "Joao", id: 2 },
-                { name: "Jean", id: 3 },
-                { name: "Gerard", id: 4 }
-            ],
-            addedElements: [
-
-            ],
-
-
-
-
-
-
 
             SidebarMenu: [
                 {
@@ -131,161 +102,36 @@ export default {
             ]
         }
     },
-
     methods: {
-        changeTab(tab) { this.tab = tab; },
-
-        log(event) {
-            console.log(event)
-        },
-
+        changeTab(tab) {
+            this.tab = tab;
+            this.$emit('changeTab', tab);
+        }
     },
-
+    emits: ['changeTab']
 };
 </script>
   
 <template>
+    <div class="w-full flex flex-col justify-between grow pb-10">
+        <div class="flex flex-col gap-2">
 
-    <div class="w-full z-10 max-w-[19rem] pt-4 pb-10 px-4 flex flex-col gap-4 bg-slate-50 border-r border-slate-200 fixed h-screen overflow-y-auto">
+            <span class="text-base text-zinc-700 font-bold tracking-tight block mb-2">Adicionar elementos:</span>
 
-        <div class="w-full flex flex-col gap-2 mx-auto">
-
-            <!-- Tab Menu -->
-            <div class="w-full flex flex-col gap-2 mx-auto" v-show="tab === 'TabMain'">
-                <template v-for="item in SidebarMenu">
-                    <div
-                        @click="changeTab(item.tab)"
-                        class="w-full flex items-center justify-between bg-gray-100 border border-slate-200 rounded-md px-3 py-3.5 cursor-pointer hover:shadow-lg hover:border-indigo-500 transition duration-700">
-                        <div class="flex items-center justify-start gap-2 grow">
-                            <div v-html="item.svg" class="w-5 h-5 inline-flex items-center text-slate-500"></div>
-                            <span class="font-semibold text-[15px] tracking-tight text-slate-600">{{ item.name }}</span>
-                        </div>
-                        <ChevronRightIcon class="w-5 h-5 text-indigo-500" />
+            <template v-for="item in SidebarMenu">
+                <div
+                    @click="changeTab(item.tab)"
+                    class="w-full flex items-center justify-between bg-gray-100 border border-slate-200 rounded-md px-3 py-2.5 2xl:py-3 cursor-pointer hover:shadow-lg hover:border-indigo-500 transition duration-700">
+                    <div class="flex items-center justify-start gap-2 grow">
+                        <div v-html="item.svg" class="w-5 h-5 inline-flex items-center text-slate-500"></div>
+                        <span class="font-semibold text-sm tracking-tight text-slate-600">{{ item.name }}</span>
                     </div>
-                </template>
-            </div>
-
-            <!-- Back button -->
-            <div
-                class="flex items-center justify-start gap-2 text-sm text-indigo-500 font-semibold cursor-pointer mb-3"
-                v-if="tab !== 'TabMain'"
-                @click="changeTab('TabMain')">
-                <ChevronDoubleLeftIcon class="w-3.5 h-3.5" />
-                Voltar
-            </div>
-
-            <!-- Tab Image -->
-            <div class="w-full flex flex-col gap-2 mx-auto" v-show="tab === 'TabImage'">
-
-                <div class="flex items-center justify-start gap-2 grow">
-                    <div v-html="SidebarMenu[0].svg" class="w-5 h-5 inline-flex items-center text-slate-500"></div>
-                    <span class="font-semibold text-[15px] tracking-tight text-slate-600">
-                        Adicionar imagem
-                    </span>
+                    <ChevronRightIcon class="w-5 h-5 text-indigo-500" />
                 </div>
-
-
-                <div class="row">
-                    <div class="w-1/2 rounded border border-slate-300">
-                        <h3>Draggable 1</h3>
-                        <draggable
-                            class="dragArea list-group"
-                            :list="checkoutElements"
-                            :group="{ name: 'people', pull: 'clone', put: false }"
-                            :sort="false"
-                            @change="log"
-                            item-key="name">
-                            <template #item="{ element }">
-                                <div class="list-group-item">
-                                    {{ element.name }}
-                                </div>
-                            </template>
-                        </draggable>
-                    </div>
-
-                    <!-- <rawDisplayer class="w-1/2" :value="list1" title="List 1" />
-                    <rawDisplayer class="w-1/2" :value="list2" title="List 2" /> -->
-                </div>
-
-
-                <div class="mt-40 border border-indigo-600 min-h-[20rem] rounded">
-
-                    <draggable
-                        class="dragArea list-group"
-                        :list="addedElements"
-                        group="people"
-                        @change="log"
-                        item-key="name">
-                        <template #item="{ element }">
-                            <div class="list-group-item">
-                                {{ element.name }}
-                            </div>
-                        </template>
-                    </draggable>
-
-                </div>
-
-            </div>
-
-            <!-- Tab Whatsapp -->
-            <div class="w-full flex flex-col gap-2 mx-auto" v-show="tab === 'TabWhatsapp'">
-                Whatsapp
-            </div>
-
-            <!-- Tab Testimonials -->
-            <div class="w-full flex flex-col gap-2 mx-auto" v-show="tab === 'TabTestimonials'">
-                Depoimentos
-            </div>
-
-            <!-- Tab Order bumps -->
-            <div class="w-full flex flex-col gap-2 mx-auto" v-show="tab === 'TabOrderBumps'">
-                Order Bumps
-            </div>
-
-            <!-- Tab Badges -->
-            <div class="w-full flex flex-col gap-2 mx-auto" v-show="tab === 'TabBadges'">
-                Selos
-            </div>
-
-            <!-- Tab List -->
-            <div class="w-full flex flex-col gap-2 mx-auto" v-show="tab === 'TabList'">
-                Adicionar lista
-            </div>
-
-            <!-- Tab Sales Notifications -->
-            <div class="w-full flex flex-col gap-2 mx-auto" v-show="tab === 'TabSalesNotifications'">
-                Notificações
-            </div>
-
-            <!-- Tab Youtube Video -->
-            <div class="w-full flex flex-col gap-2 mx-auto" v-show="tab === 'TabEmbedVideo'">
-                Adicionar vídeo do YouTube
-            </div>
-
-            <!-- Tab Text -->
-            <div class="w-full flex flex-col gap-2 mx-auto" v-show="tab === 'TabText'">
-                Adicionar texto
-            </div>
-
-            <!-- Tab Countdown -->
-            <div class="w-full flex flex-col gap-2 mx-auto" v-show="tab === 'TabCountdown'">
-                Contagem regressiva
-            </div>
-
-            <!-- Tab Whatsapp -->
-            <div class="w-full flex flex-col gap-2 mx-auto" v-show="tab === 'TabWhatsapp'">
-                Adicionar botão do WhatsApp
-            </div>
-
-            <!-- Tab Back Redirect -->
-            <div class="w-full flex flex-col gap-2 mx-auto" v-show="tab === 'TabBackRedirect'">
-                Back Redirect
-            </div>
-
+            </template>
         </div>
-
-
-
+        <button class="pepper-btn pepper-btn-success">
+            Salvar alterações
+        </button>
     </div>
-
 </template>

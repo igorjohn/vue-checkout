@@ -358,16 +358,16 @@ export default {
             <div :class="Classes.containerPayment">
 
                 <!-- Você está adquirindo -->
-                <div class="rounded-md lg:col-span-2 px-3 lg:px-5 py-3.5 lg:py-4 bg-gray-50 border border-gray-200 mb-3">
-                    <div class="w-full font-bold tracking-tight text-xs uppercase text-indigo-600">Você está adquirindo:</div>
+                <div class="rounded-md lg:col-span-2 px-3 lg:px-5 py-3.5 lg:py-4 border border-zinc-200 mb-3">
+                    <div class="w-full font-bold tracking-tight text-xs uppercase text-indigo-500">Você está adquirindo:</div>
                     <div class="flex items-start justify-start gap-3 mt-3">
-                        <img :src="OrderBump01" class="w-12 h-12 rounded-md object-cover shadow-lg" />
+                        <img :src="OrderBump01" class="w-12 h-12 lg:w-16 lg:h-16 rounded-md object-cover shadow-lg" />
                         <div class="flex flex-col -mt-[3px]">
-                            <span class="block text-base font-semibold text-slate-600 tracking-tight">
+                            <span class="block text-sm font-semibold text-slate-600 tracking-tight">
                                 Curso de gastronomia atualizado para 2023 – As melhores receitas
                             </span>
                             <span class="flex items-center gap-1 mt-1 text-sm font-medium text-slate-500"> 12x <span class="text-xl font-bold text-slate-700 tracking-tighter">R$ 22,70</span></span>
-                            <span class="flex mt-1 text-sm font-medium text-slate-500">ou R$ 197,00 à vista</span>
+                            <span class="flex mt-1 text-xs font-medium text-slate-500">ou R$ 197,00 à vista</span>
                         </div>
                     </div>
                 </div>
@@ -433,12 +433,12 @@ export default {
 
 
                 <!-- Credit card Saved Data -->
-                <div class="lg:col-span-2 grid grid-cols-3 gap-3 gap-x-2" v-show="creditCardSavedData">
+                <div class="lg:col-span-2 flex flex-col gap-2" v-show="creditCardSavedData">
                     <template v-for="cc in creditCardSavedData">
                         <div
                             v-if="!cc.isOff"
                             @click="toggleSavedCard(cc.id)"
-                            :class="[selectedCreditCardSavedData === cc.id ? 'border-green-600' : 'border-gray-150 hover:border-green-600', 'col-span-3 w-full rounded-md bg-gray-50 border-2 transition duration-700 flex grow gap-2 px-3 py-3.5 items-center justify-between cursor-pointer']">
+                            :class="[selectedCreditCardSavedData === cc.id ? 'border-green-600' : 'border-gray-150 hover:border-green-600', 'w-full rounded-md bg-gray-50 border-2 transition duration-700 flex grow gap-2 px-3 py-3.5 items-center justify-between cursor-pointer']">
                             <div class="flex gap-3 items-center justify-start grow">
                                 <div :class="[{ 'visa': cc.brand == 'Visa' }, { 'mastercard': cc.brand == 'Mastercard' }, { 'hipercard': cc.brand == 'Hipercard' }, { 'elo': cc.brand == 'Elo' }, { 'amex': cc.brand == 'AMEX' }, { 'jcb': cc.brand == 'JCB' }, { 'discover': cc.brand == 'Discover' }, 'saved-credit-card']">
                                 </div>
@@ -698,8 +698,8 @@ export default {
         <div v-if="checkoutHas2Columns" :class="['max-w-xl mx-auto xl:mx-0 w-full xl:w-1/3 xl:pl-5 xl:border-l xl:border-zinc-200', Classes.checkoutRightColumn]">
 
             <!-- Checkout List -->
-            <div v-if="Elements.List && Elements.List !== []" class="flex flex-col items-start justify-start gap-2 rounded-md bg-[#eff4f9] px-3.5 py-4 lg:px-4 border border-indigo-400">
-                <span class="text-base text-indigo-600 font-bold tracking-tight block mb-2">
+            <div v-if="Elements.List && Elements.List !== []" class="flex flex-col items-start justify-start gap-2 rounded-md bg-[#eff4f9] px-3.5 py-4 lg:px-4 border border-slate-300">
+                <span class="text-base text-zinc-700 font-bold tracking-tight block mb-2">
                     {{ Elements.List.title }}
                 </span>
                 <template v-for="ul in Elements.List.ul">
@@ -806,9 +806,9 @@ svg {
 }
 
 #buyBtn {
-    box-shadow: inset 0 -3px 0px 0px rgb(0, 0, 0, 0.1);
+    box-shadow: inset 0 -4px 0px 0px rgb(0, 0, 0, 0.1);
     padding: 0.75rem 1.25rem 0.9rem 1.25rem;
-    background: #1fae39;
+    background: #1cc53b;
 }
 
 .input-shadow:focus {
