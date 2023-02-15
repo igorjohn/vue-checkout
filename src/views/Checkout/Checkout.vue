@@ -299,12 +299,12 @@ export default {
             hasSavedCards: false,
 
             // Validação - Nome
-            NameIsValid: false,
+            NameIsValid: null,
             NameErrorMessage: '',
             name: '',
 
             // Validação - Email
-            EmailIsValid: false,
+            EmailIsValid: null,
             EmailErrorMessage: '',
             ShowEmailAutoSuggest: false,
             EmailSuggest: [],

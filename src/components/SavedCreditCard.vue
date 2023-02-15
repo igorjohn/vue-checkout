@@ -63,7 +63,7 @@ export default {
 </script>
   
 <template>
-    <div class="lg:col-span-2 flex flex-col" v-if="hasSavedCardData && creditCardSavedData && this.creditCardSavedData.filter((el) => { return (el.isActive === true) }).length > 0">
+    <div class="lg:col-span-2 flex flex-col" v-if="hasSavedCardData && creditCardSavedData && creditCardSavedData.filter((el) => { return (el.isActive === true) }).length > 0">
         <template v-for="cc in creditCardSavedData">
             <transition appear>
                 <div
