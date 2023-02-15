@@ -57,6 +57,11 @@ export default {
                 // Selecionar o primeiro cartão da Array 'isActive':
                 this.selectedCreditCardSavedData = this.creditCardSavedData.filter((el) => { return (el.isActive === true) })[0].id;
             }
+
+            if (totalActive == 0) {
+                this.hasSavedCardData = false;
+                this.$emit('hasSavedCardData', this.hasSavedCardData);
+            }
         }
     }
 };
