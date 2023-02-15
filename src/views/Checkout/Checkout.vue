@@ -512,14 +512,14 @@ export default {
                             autocomplete="name"
                             v-maska:[maskName]
                             data-maska="Aa a a a a"
-                            :class="[{ 'input-has-error': this.NameIsValid == false }, Classes.input, 'pl-8']"
+                            :class="[{ 'input-has-error': !NameIsValid }, Classes.input, 'pl-8']"
                             required
                             inputmode="text"
                             type="text" />
                         <div v-html="icons.user" :class="Classes.containerIcon"></div>
                     </div>
-                    <div v-if="this.NameIsValid == false" class="checkout-invalid-feedback">
-                        {{ this.NameErrorMessage }}
+                    <div v-if="!NameIsValid" class="checkout-invalid-feedback">
+                        {{ NameErrorMessage }}
                     </div>
                 </div>
 
@@ -527,7 +527,7 @@ export default {
                     <label :class="Classes.label"> Digite seu e-mail: </label>
                     <div :class="Classes.containerInputIcon">
                         <input
-                            :class="[{ 'input-has-error': this.EmailIsValid == false }, Classes.input, 'pl-8']"
+                            :class="[{ 'input-has-error': !EmailIsValid }, Classes.input, 'pl-8']"
                             v-model="email"
                             autocomplete="email"
                             @keyup="ValidateEmail(email)"
