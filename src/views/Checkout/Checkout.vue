@@ -311,12 +311,12 @@ export default {
             email: '',
 
             // Validação - Phone
-            PhoneIsValid: false,
+            PhoneIsValid: null,
             PhoneErrorMessage: '',
             phone: '',
 
             // Validação - CPF
-            CpfIsValid: false,
+            CpfIsValid: null,
             CpfErrorMessage: '',
             doc: '',
 
@@ -512,13 +512,13 @@ export default {
                             autocomplete="name"
                             v-maska:[maskName]
                             data-maska="Aa a a a a"
-                            :class="[{ 'input-has-error': !NameIsValid }, Classes.input, 'pl-8']"
+                            :class="[{ 'input-has-error': NameIsValid == false }, Classes.input, 'pl-8']"
                             required
                             inputmode="text"
                             type="text" />
                         <div v-html="icons.user" :class="Classes.containerIcon"></div>
                     </div>
-                    <div v-if="!NameIsValid" class="checkout-invalid-feedback">
+                    <div v-if="NameIsValid == false" class="checkout-invalid-feedback">
                         {{ NameErrorMessage }}
                     </div>
                 </div>
@@ -527,7 +527,7 @@ export default {
                     <label :class="Classes.label"> Digite seu e-mail: </label>
                     <div :class="Classes.containerInputIcon">
                         <input
-                            :class="[{ 'input-has-error': !EmailIsValid }, Classes.input, 'pl-8']"
+                            :class="[{ 'input-has-error': EmailIsValid == false }, Classes.input, 'pl-8']"
                             v-model="email"
                             autocomplete="email"
                             @keyup="ValidateEmail(email)"
@@ -552,7 +552,7 @@ export default {
                         </transition>
 
                     </div>
-                    <div v-if="!EmailIsValid" class="checkout-invalid-feedback">
+                    <div v-if="EmailIsValid == false" class="checkout-invalid-feedback">
                         {{ EmailErrorMessage }}
                     </div>
                 </div>
@@ -563,7 +563,7 @@ export default {
                         <SelectCountryFlags />
                         <div :class="Classes.containerInputIcon">
                             <input
-                                :class="[{ 'input-has-error': !PhoneIsValid }, Classes.input, 'pl-8 rounded-l-none rounded-r-md']"
+                                :class="[{ 'input-has-error': PhoneIsValid == false }, Classes.input, 'pl-8 rounded-l-none rounded-r-md']"
                                 v-model="phone"
                                 autocomplete="phone"
                                 @input="ValidatePhone(phone)"
@@ -575,7 +575,7 @@ export default {
                             <div v-html="icons.phone" :class="Classes.containerIcon"></div>
                         </div>
                     </div>
-                    <div v-if="!PhoneIsValid" class="checkout-invalid-feedback">
+                    <div v-if="PhoneIsValid == false" class="checkout-invalid-feedback">
                         {{ PhoneErrorMessage }}
                     </div>
                 </div>
@@ -583,7 +583,7 @@ export default {
                 <div class="lg:col-span-1">
                     <label :class="Classes.label"> CPF: </label>
                     <input
-                        :class="[{ 'input-has-error': !CpfIsValid }, Classes.input]"
+                        :class="[{ 'input-has-error': CpfIsValid == false }, Classes.input]"
                         v-model="doc"
                         @input="ValidateCPF(doc)"
                         v-maska
@@ -591,7 +591,7 @@ export default {
                         required
                         inputmode="tel"
                         type="text" />
-                    <div v-if="!CpfIsValid" class="checkout-invalid-feedback">
+                    <div v-if="CpfIsValid == false" class="checkout-invalid-feedback">
                         {{ CpfErrorMessage }}
                     </div>
                 </div>
