@@ -4,7 +4,7 @@ import CheckoutBuilderView from '@/views/CheckoutBuilder/Builder.vue';
 
 const routes = [
   {
-    path: '/:catchAll(.*)', redirect: 'Checkout'
+    path: '/:catchAll(.*)', redirect: 'checkout'
   },
   {
     path: '/checkout',

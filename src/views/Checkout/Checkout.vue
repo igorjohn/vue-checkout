@@ -299,26 +299,26 @@ export default {
             hasSavedCards: false,
 
             // Validação - Nome
-            NameIsValid: null,
+            NameIsValid: false,
             NameErrorMessage: '',
-            name: null,
+            name: '',
 
             // Validação - Email
-            EmailIsValid: null,
+            EmailIsValid: false,
             EmailErrorMessage: '',
             ShowEmailAutoSuggest: false,
             EmailSuggest: [],
-            email: null,
+            email: '',
 
             // Validação - Phone
-            PhoneIsValid: null,
+            PhoneIsValid: false,
             PhoneErrorMessage: '',
-            phone: null,
+            phone: '',
 
             // Validação - CPF
-            CpfIsValid: null,
+            CpfIsValid: false,
             CpfErrorMessage: '',
-            doc: null,
+            doc: '',
 
         }
     },
