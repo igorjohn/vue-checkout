@@ -2,8 +2,9 @@
 
 import { ref } from 'vue'
 import { TransitionRoot, TransitionChild, Dialog, DialogPanel, Listbox, ListboxButton, ListboxOptions, ListboxOption } from '@headlessui/vue'
-import { ChevronDownIcon, CheckCircleIcon, TrashIcon } from '@heroicons/vue/20/solid'
+import { ChevronDownIcon } from '@heroicons/vue/20/solid'
 
+import { vMaska } from "maska";
 
 let openLoader = ref(false);
 function onPurchase() {
@@ -36,6 +37,34 @@ const selectedInstallment = ref(installment[11]);
 const expirationYear = ref(null);
 const expirationMonth = ref(null);
 
+const maskName = {
+    tokens: {
+        A: {
+            multiple: false,
+            transform: chr => chr.toUpperCase()
+        },
+        a: {
+            multiple: true,
+        }
+    }
+}
+
+const maskEmail = {
+    tokens: {
+        a: {
+            multiple: false,
+            pattern: /^(?![@,#,!,$,%,¨,*,&,(,),+,=,[,{,},~,^,`,\,/,;,:,<,>])/,
+            transform: chr => chr.toLowerCase()
+        },
+        b: {
+            multiple: true,
+            pattern: /^(?![#,!,$,%,¨,*,&,(,),+,=,[,{,},~,^,`,\,/,;,:,<,>])/,
+            transform: chr => chr.toLowerCase()
+        }
+    }
+}
+
+
 </script >
 
 <script type="text/javascript">
@@ -45,68 +74,16 @@ import BannerImg from '@/assets/img/mock/checkout-banner.png';
 import OrderBump01 from '@/assets/img/mock/orderbump-01.jpeg';
 import OrderBump02 from '@/assets/img/mock/orderbump-02.jpeg';
 
+import SelectCountryFlags from "@/components/SelectCountryFlags.vue";
+import CreditCardSavedData from "@/components/SavedCreditCard.vue";
+import CheckoutStep from "@/components/CheckoutStep.vue";
+
 export default {
     data() {
         return {
             pepper: this.pepper,
             tab: 1,
             checkoutHas2Columns: true,
-
-            selectedCreditCardSavedData: 1,
-
-            creditCardSavedData: [
-                {
-                    id: 1,
-                    brand: 'Mastercard',
-                    lastDigits: '**** **** **** 7749',
-                    expiration: '04/24',
-                    isOff: false
-                },
-                {
-                    id: 2,
-                    brand: 'Visa',
-                    lastDigits: '**** **** **** 6763',
-                    expiration: '11/28',
-                    isOff: false
-                },
-                /*  {
-                     id: 3,
-                     brand: 'Elo',
-                     lastDigits: '**** **** **** 6763',
-                     expiration: '11/28',
-                     isOff: false
-                 },
-                 {
-                     id: 4,
-                     brand: 'Hipercard',
-                     lastDigits: '**** **** **** 6763',
-                     expiration: '11/28',
-                     isOff: false
-                 },
-                 {
-                     id: 5,
-                     brand: 'AMEX',
-                     lastDigits: '**** **** **** 6763',
-                     expiration: '11/28',
-                     isOff: false
-                 },
-                 {
-                     id: 6,
-                     brand: 'Discover',
-                     lastDigits: '**** **** **** 6763',
-                     expiration: '11/28',
-                     isOff: false
-                 },
-                 {
-                     id: 7,
-                     brand: 'JCB',
-                     lastDigits: '**** **** **** 6763',
-                     expiration: '11/28',
-                     isOff: false
-                 } */
-            ],
-
-
 
             Elements: {
                 Badges: [
@@ -147,13 +124,12 @@ export default {
             Classes: {
                 checkoutLeftColumn: 'w-full max-w-3xl mx-auto pt-6 pb-8 lg:pb-10 px-3 flex flex-col gap-4',
                 checkoutRightColumn: 'xl:pt-6 pb-12 px-3 flex flex-col gap-5',
-                input: 'border border-slate-300 text-gray-700 text-sm bg-white placeholder-gray-400 focus:border-indigo-400 input-shadow w-full rounded-md py-2 px-3 font-medium outline-none transition duration-500 focus:ring0 disabled:cursor-default disabled:bg-[#F5F7FD]',
-                inputHasIcon: 'border border-slate-300 text-gray-700 text-sm bg-white placeholder-gray-400 focus:border-indigo-400 input-shadow w-full rounded-md py-2 pr-3 pl-8 font-medium outline-none transition duration-500 focus:ring-0 disabled:cursor-default disabled:bg-[#F5F7FD]',
+                input: 'border border-slate-300 text-gray-700 text-sm bg-white placeholder-gray-400 focus:border-indigo-400 w-full rounded-md py-2 px-3 font-medium outline-none transition duration-500 focus:ring-0 disabled:cursor-default disabled:bg-[#F5F7FD]',
                 label: 'block text-sm font-medium text-slate-600 mb-1',
                 button: 'flex w-full justify-center rounded-md border-0 bg-green-500 text-lg tracking-tight font-bold text-white hover:text-white hover:bg-green-400 focus:outline-none focus:ring-2 focus:ring-green-700 focus:ring-offset-0',
                 containerPayment: 'w-full grid grid-cols-1 lg:grid-cols-2 gap-3 px-1',
                 containerIcon: 'absolute left-0 top-0 h-[38px] w-[32px] ml-[2px] flex items-center justify-center text-slate-500',
-                containerInputIcon: 'relative w-full h-[40px]',
+                containerInputIcon: 'relative w-full',
                 footerFlagImg: 'mr-1 h-[24px] w-[36px]',
                 discount: {
                     input: 'h-[32px] border border-slate-300 text-gray-600 text-xs bg-white placeholder-gray-400 focus:border-indigo-400 grow rounded py-2 px-2.5 font-medium outline-none transition duration-500 focus:ring-0 disabled:cursor-default disabled:bg-[#F5F7FD]',
@@ -318,7 +294,32 @@ export default {
                     }
                 },
 
-            ]
+            ],
+
+            hasSavedCards: false,
+
+            // Validação - Nome
+            NameIsValid: null,
+            NameErrorMessage: '',
+            name: null,
+
+            // Validação - Email
+            EmailIsValid: null,
+            EmailErrorMessage: '',
+            ShowEmailAutoSuggest: false,
+            EmailSuggest: [],
+            email: null,
+
+            // Validação - Phone
+            PhoneIsValid: null,
+            PhoneErrorMessage: '',
+            phone: null,
+
+            // Validação - CPF
+            CpfIsValid: null,
+            CpfErrorMessage: '',
+            doc: null,
+
         }
     },
     methods: {
@@ -326,15 +327,144 @@ export default {
         paymentPix() { this.tab = 2; },
         paymentBillet() { this.tab = 3; },
 
-        toggleSavedCard(e) { this.selectedCreditCardSavedData = e; },
-        turnOffCreditCard(e) { e.isOff = true; }
-    },
 
+        // Validations:
+        ValidateName(val) {
+            this.NameIsValid = false;
+            this.NameErrorMessage = 'Digite o seu nome completo.'
+
+            if (val == '' || !val) {
+                this.NameIsValid = false;
+                this.NameErrorMessage = 'Este campo é obrigatório.'
+            }
+
+            if (val.length > 0 && val.length >= 4) this.NameIsValid = false;
+            if (val.length > 4) this.NameIsValid = true;
+        },
+
+        ValidateEmail(mail) {
+            const EmailDomains = [
+                'hotmail.com',
+                'gmail.com',
+                'terra.com.br',
+                'icloud.com',
+                'yahoo.com.br',
+                'outlook.com',
+                'live.com'
+            ]
+
+            if (!mail.includes('@')) {
+                this.ShowEmailAutoSuggest = false;
+            }
+
+            if (mail.includes('@')) {
+                this.ShowEmailAutoSuggest = true;
+
+                const getLength = mail.split('@').length;
+                const query = mail.split('@')[getLength - 1];
+
+                const domain = RegExp(`.*${query.toLowerCase().split('').join('.*')}.*`)
+                const matches = EmailDomains.filter(v => v.toLowerCase().match(domain))
+
+                this.EmailSuggest = matches;
+            }
+
+            this.EmailIsValid = false;
+            this.EmailErrorMessage = 'Insira um e-mail válido.'
+
+            // Regex e-mail:
+            if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(mail)) {
+
+                this.EmailIsValid = true;
+                console.log('E-mail validou.');
+
+            } else {
+                this.EmailIsValid = false;
+                console.log("E-mail inválido!");
+
+                if (mail == '' || !mail) this.EmailErrorMessage = 'Este campo é obrigatório.'
+            }
+        },
+
+        ValidatePhone(phone) {
+            this.PhoneIsValid = false;
+
+            let phoneNumbers = phone.replace(/[\s.,-,/(,/)]*/igm, '');
+
+            if (phoneNumbers.length >= 10) {
+                this.PhoneIsValid = true;
+
+            } else {
+                this.PhoneIsValid = false;
+                this.PhoneErrorMessage = "Digite um telefone válido."
+            }
+        },
+
+        ValidateCPF(val) {
+            this.CpfIsValid = false;
+            this.CpfErrorMessage = 'Digite um CPF válido.';
+
+            function isCpfValid() {
+                var Soma = 0;
+                var strCPF = val.replace('.', '').replace('.', '').replace('-', '');
+
+                if (strCPF === '00000000000' || strCPF === '11111111111' || strCPF === '22222222222' || strCPF === '33333333333' ||
+                    strCPF === '44444444444' || strCPF === '55555555555' || strCPF === '66666666666' || strCPF === '77777777777' || strCPF === '88888888888' ||
+                    strCPF === '99999999999' || strCPF.length !== 11) {
+                    return false;
+                }
+
+                for (let i = 1; i <= 9; i++) {
+                    Soma = Soma + parseInt(strCPF.substring(i - 1, i)) * (11 - i);
+                }
+
+                var Resto = (Soma * 10) % 11;
+                if ((Resto === 10) || (Resto === 11)) {
+                    Resto = 0;
+                }
+
+                if (Resto !== parseInt(strCPF.substring(9, 10))) {
+                    return false;
+                }
+
+                Soma = 0;
+                for (let k = 1; k <= 10; k++) {
+                    Soma = Soma + parseInt(strCPF.substring(k - 1, k)) * (12 - k)
+                }
+
+                Resto = (Soma * 10) % 11;
+                if ((Resto === 10) || (Resto === 11)) {
+                    Resto = 0;
+                }
+
+                if (Resto !== parseInt(strCPF.substring(10, 11))) {
+                    return false;
+                }
+
+                return true;
+            }
+
+            if (isCpfValid() == false) this.CpfIsValid = false;
+            if (isCpfValid() == true) this.CpfIsValid = true;
+        },
+
+
+        SelectEmailSuggest(suggested) {
+            this.ShowEmailAutoSuggest = false;
+            this.email = this.email.split('@')[0] + '@' + suggested;
+
+            this.EmailIsValid = true;
+        },
+
+        checkSavedCards(event) {
+            event ? this.hasSavedCards = true : this.hasSavedCards = false;
+
+        }
+    },
     mounted() {
         document.title = 'Checkout – Pepper'
     }
 }
-
 </script>
 
 <template>
@@ -347,19 +477,17 @@ export default {
     </div>
 
     <div id="checkout-container" class="w-full flex flex-col xl:flex-row xl:justify-center">
-
         <!-- Checkout Left Column -->
         <div :class="[checkoutHas2Columns ? 'xl:mx-0 xl:w-2/3 xl:px-6' : '', Classes.checkoutLeftColumn]">
-
             <!-- Checkout Banner -->
             <img :src="BannerImg" class="w-full rounded-lg" />
-
             <!-- Payment form container -->
             <div :class="Classes.containerPayment">
-
                 <!-- Você está adquirindo -->
                 <div class="rounded-md lg:col-span-2 px-3 lg:px-5 py-3.5 lg:py-4 border border-zinc-200 mb-3">
-                    <div class="w-full font-bold tracking-tight text-xs uppercase text-indigo-500">Você está adquirindo:</div>
+                    <div class="w-full font-bold tracking-tight text-xs uppercase text-indigo-500">
+                        Você está adquirindo:
+                    </div>
                     <div class="flex items-start justify-start gap-3 mt-3">
                         <img :src="OrderBump01" class="w-12 h-12 lg:w-16 lg:h-16 rounded-md object-cover shadow-lg" />
                         <div class="flex flex-col -mt-[3px]">
@@ -372,38 +500,100 @@ export default {
                     </div>
                 </div>
 
-                <div :class="Classes.step.container">
-                    <div :class="Classes.step.number">1</div>
-                    <div :class="Classes.step.text">Suas informações</div>
-                </div>
+
+                <CheckoutStep :hasNumber="true" :StepNumber="1" title="Suas informações" />
 
                 <div class="lg:col-span-2">
                     <label :class="Classes.label"> Nome completo: </label>
                     <div :class="Classes.containerInputIcon">
-                        <input :class="Classes.inputHasIcon" required inputmode="text" type="text" />
+                        <input
+                            @input="ValidateName(name)"
+                            v-model="name"
+                            autocomplete="name"
+                            v-maska:[maskName]
+                            data-maska="Aa a a a a"
+                            :class="[{ 'input-has-error': this.NameIsValid == false }, Classes.input, 'pl-8']"
+                            required
+                            inputmode="text"
+                            type="text" />
                         <div v-html="icons.user" :class="Classes.containerIcon"></div>
+                    </div>
+                    <div v-if="this.NameIsValid == false" class="checkout-invalid-feedback">
+                        {{ this.NameErrorMessage }}
                     </div>
                 </div>
 
                 <div class="lg:col-span-2">
                     <label :class="Classes.label"> Digite seu e-mail: </label>
                     <div :class="Classes.containerInputIcon">
-                        <input :class="Classes.inputHasIcon" required inputmode="email" type="email" />
+                        <input
+                            :class="[{ 'input-has-error': this.EmailIsValid == false }, Classes.input, 'pl-8']"
+                            v-model="email"
+                            autocomplete="email"
+                            @keyup="ValidateEmail(email)"
+                            v-maska:[maskEmail]
+                            data-maska="aab"
+                            required
+                            inputmode="email"
+                            type="email" />
                         <div v-html="icons.email" :class="Classes.containerIcon"></div>
+
+                        <!-- Email autosuggest -->
+                        <transition appear>
+                            <div v-if="this.ShowEmailAutoSuggest == true" class="w-full rounded-md bg-gray-50 border border-slate-400 shadow-lg absolute overflow-hidden top-100 z-40 mt-1">
+                                <template v-for="sug in EmailSuggest">
+                                    <li
+                                        @click.stop.prevent="SelectEmailSuggest(sug)"
+                                        class="pr-3 pl-8 py-2.5 text-sm font-medium text-gray-600 list-none cursor-pointer hover:bg-indigo-100 hover:text-slate-700 transition duration-600">
+                                        {{ this.email.split('@')[0] + '@' + sug }}
+                                    </li>
+                                </template>
+                            </div>
+                        </transition>
+
+                    </div>
+                    <div v-if="this.EmailIsValid == false" class="checkout-invalid-feedback">
+                        {{ this.EmailErrorMessage }}
                     </div>
                 </div>
 
                 <div class="lg:col-span-1">
                     <label :class="Classes.label"> Celular: </label>
-                    <div :class="Classes.containerInputIcon">
-                        <input :class="Classes.inputHasIcon" required inputmode="tel" type="text" />
-                        <div v-html="icons.phone" :class="Classes.containerIcon"></div>
+                    <div class="flex flex-row">
+                        <SelectCountryFlags />
+                        <div :class="Classes.containerInputIcon">
+                            <input
+                                :class="[{ 'input-has-error': this.PhoneIsValid == false }, Classes.input, 'pl-8 rounded-l-none rounded-r-md']"
+                                v-model="phone"
+                                autocomplete="phone"
+                                @input="ValidatePhone(phone)"
+                                v-maska
+                                data-maska="['(##) #### ####', '(##) ##### ####']"
+                                required
+                                inputmode="tel"
+                                type="text" />
+                            <div v-html="icons.phone" :class="Classes.containerIcon"></div>
+                        </div>
+                    </div>
+                    <div v-if="this.PhoneIsValid == false" class="checkout-invalid-feedback">
+                        {{ this.PhoneErrorMessage }}
                     </div>
                 </div>
 
                 <div class="lg:col-span-1">
                     <label :class="Classes.label"> CPF: </label>
-                    <input :class="Classes.input" type="text" required inputmode="tel" />
+                    <input
+                        :class="[{ 'input-has-error': this.CpfIsValid == false }, Classes.input]"
+                        v-model="doc"
+                        @input="ValidateCPF(doc)"
+                        v-maska
+                        data-maska="###.###.###-##"
+                        required
+                        inputmode="tel"
+                        type="text" />
+                    <div v-if="this.CpfIsValid == false" class="checkout-invalid-feedback">
+                        {{ this.CpfErrorMessage }}
+                    </div>
                 </div>
 
                 <!--  <div class="lg:col-span-2 pt-4">
@@ -426,37 +616,12 @@ export default {
                     </div>
                 </div> -->
 
-                <div :class="Classes.step.container" class="mt-4">
-                    <div :class="Classes.step.number">2</div>
-                    <div :class="Classes.step.text">Dados de pagamento</div>
-                </div>
+                <CheckoutStep :hasNumber="true" :StepNumber="2" title="Dados de pagamento" class="mt-4" />
 
+                <!-- Saved Credit card -->
+                <CreditCardSavedData @hasSavedCardData="checkSavedCards" />
 
-                <!-- Credit card Saved Data -->
-                <div class="lg:col-span-2 flex flex-col gap-2" v-show="creditCardSavedData">
-                    <template v-for="cc in creditCardSavedData">
-                        <div
-                            v-if="!cc.isOff"
-                            @click="toggleSavedCard(cc.id)"
-                            :class="[selectedCreditCardSavedData === cc.id ? 'border-green-600' : 'border-gray-150 hover:border-green-600', 'w-full rounded-md bg-gray-50 border-2 transition duration-700 flex grow gap-2 px-3 py-3.5 items-center justify-between cursor-pointer']">
-                            <div class="flex gap-3 items-center justify-start grow">
-                                <div :class="[{ 'visa': cc.brand == 'Visa' }, { 'mastercard': cc.brand == 'Mastercard' }, { 'hipercard': cc.brand == 'Hipercard' }, { 'elo': cc.brand == 'Elo' }, { 'amex': cc.brand == 'AMEX' }, { 'jcb': cc.brand == 'JCB' }, { 'discover': cc.brand == 'Discover' }, 'saved-credit-card']">
-                                </div>
-                                <div>
-                                    <span class="flex gap-1 text-sm text-slate-700 font-semibold">{{ cc.brand }} <span class="font-bold ms-1 tracking-tight">*{{ cc.lastDigits }}</span></span>
-                                    <span class="flex gap-1 text-xs text-slate-500 font-normal">Validade {{ cc.expiration }}</span>
-                                </div>
-                            </div>
-                            <div class="inline-flex items-center justify-center gap-2 mr-1 transition duration-500">
-                                <TrashIcon @click="turnOffCreditCard(cc)" class="w-4 h-4 text-gray-300" />
-                                <CheckCircleIcon :class="[selectedCreditCardSavedData == cc.id ? 'text-green-600' : 'text-slate-400', 'w-6 h-6 transition duration-700']" />
-                            </div>
-                        </div>
-                    </template>
-                </div>
-
-
-                <div class="flex justify-start gap-x-2 lg:col-span-2" v-if="!creditCardSavedData || this.creditCardSavedData.filter((el) => { return (el.isOff === false) }).length < 1">
+                <div class="flex justify-start gap-x-2 lg:col-span-2" v-if="!hasSavedCards">
                     <button
                         @click="paymentCreditCard"
                         :class="[Classes.tabs.default, tab == 1 ? Classes.tabs.selected : Classes.tabs.notSelected]">
@@ -484,13 +649,13 @@ export default {
                 </div>
 
                 <!-- Credit card Tab -->
-                <div class="lg:col-span-2 grid grid-cols-3 gap-3 gap-x-2 my-2" v-if="(!creditCardSavedData || this.creditCardSavedData.filter((el) => { return (el.isOff === false) }).length < 1) && tab === 1">
+                <div class="lg:col-span-2 grid grid-cols-3 gap-3 gap-x-2 my-2" v-if="!hasSavedCards">
                     <div class="col-span-3">
                         <label :class="Classes.label">
                             Número do cartão:
                         </label>
                         <div :class="Classes.containerInputIcon">
-                            <input :class="Classes.input" required inputmode="tel" type="text" />
+                            <input :class="Classes.input" required inputmode="tel" type="text" v-maska data-maska="#### #### #### ####" />
                         </div>
                     </div>
 
@@ -499,7 +664,7 @@ export default {
                             Nome impresso no cartão:
                         </label>
                         <div :class="Classes.containerInputIcon">
-                            <input :class="Classes.input" required inputmode="text" type="text" />
+                            <input :class="Classes.input" required inputmode="text" type="text" v-maska data-maska="A A A A A" data-maska-tokens="A:[A-Z]:multiple" />
                         </div>
                     </div>
 
@@ -538,7 +703,7 @@ export default {
                             CVV:
                         </label>
                         <div :class="Classes.containerInputIcon">
-                            <input :class="Classes.inputHasIcon" required maxlength="4" inputmode="tel" type="text" />
+                            <input :class="[Classes.input, 'pl-8']" required maxlength="4" inputmode="tel" type="text" v-maska data-maska="####" />
                             <div v-html="icons.lock" class="w-4 absolute top-0 left-0 h-[36px] flex items-center justify-center mx-2 text-slate-500 z-10"></div>
                         </div>
                     </div>
@@ -587,7 +752,6 @@ export default {
                     <span class="block text-base font-semibold text-slate-600 mb-4">
                         Pague no PIX
                     </span>
-
                     <span :class="Classes.pixTab.titleWrapper">
                         <div v-html="icons.pixLiClock"></div>
                         Imediato
@@ -595,7 +759,6 @@ export default {
                     <span :class="Classes.pixTab.secondaryText">
                         Ao selecionar a opção Gerar Pix, o código para pagamento estará disponível.
                     </span>
-
                     <span :class="Classes.pixTab.titleWrapper">
                         <div v-html="icons.pixLiQRCode"></div>
                         Pagamento simples
@@ -603,7 +766,6 @@ export default {
                     <span :class="Classes.pixTab.secondaryText">
                         Basta abrir o aplicativo do seu banco, procurar pelo PIX e escanear o QRcode.
                     </span>
-
                     <span :class="Classes.pixTab.titleWrapper">
                         <div v-html="icons.pixLiShield"></div>
                         100% Seguro
@@ -619,6 +781,9 @@ export default {
                     Boleto bancário
                 </div>
                 <!-- End Billet Tab -->
+
+
+                <CheckoutStep :hasNumber="false" title="Aproveite também com descontos incríveis:" class="mt-4" />
 
                 <div class="lg:col-span-2 my-2">
 
@@ -652,7 +817,7 @@ export default {
                 </div>
 
                 <div class="lg:col-span-2">
-                    <span class="text-base text-indigo-600 font-bold tracking-tight block mb-2">
+                    <span class="text-base text-indigo-600 font-bold tracking-tight block md:text-right mb-2">
                         Valor total: 12x de R$ 22,70 no cartão
                     </span>
 
@@ -801,10 +966,6 @@ html,
     color: #999;
 }
 
-svg {
-    max-width: 100% !important;
-}
-
 #buyBtn {
     box-shadow: inset 0 -4px 0px 0px rgb(0, 0, 0, 0.1);
     padding: 0.75rem 1.25rem 0.9rem 1.25rem;
@@ -819,51 +980,6 @@ svg {
     cursor: pointer;
     color: #6366f1;
     transition: background-color .15s ease-in-out, background-position .15s ease-in-out, border-color .15s ease-in-out, box-shadow .15s ease-in-out;
-}
-
-/* Loader animation */
-.loading:after {
-    overflow: hidden;
-    display: inline-block;
-    vertical-align: bottom;
-    -webkit-animation: ellipsis steps(4, end) 1200ms infinite;
-    animation: ellipsis steps(4, end) 1200ms infinite;
-    content: "\2026";
-    width: 0px;
-}
-
-.pepper-spinner {
-    display: inline-block;
-    border-top: 2px solid var(--prealoder-border);
-    border-left: 2px solid var(--prealoder-border);
-    border-right: 1px solid transparent;
-    border-radius: 50%;
-    animation: spin 1s linear infinite;
-    -webkit-animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-    to {
-        -webkit-transform: rotate(360deg)
-    }
-}
-
-@-webkit-keyframes spin {
-    to {
-        -webkit-transform: rotate(360deg)
-    }
-}
-
-@keyframes ellipsis {
-    to {
-        width: 1.25em;
-    }
-}
-
-@-webkit-keyframes ellipsis {
-    to {
-        width: 1.25em;
-    }
 }
 
 .saved-credit-card {
@@ -904,5 +1020,43 @@ svg {
 
 .saved-credit-card.discover {
     background-image: url('https://img6.wsimg.com/fos/react/icons/115/gd/sprite.svg#discover');
+}
+
+.input-has-error,
+.input-has-error:focus {
+    border-color: rgb(239, 68, 68) !important;
+}
+
+.checkout-invalid-feedback {
+    display: block;
+    font-size: 12px;
+    color: rgb(227, 41, 41);
+    margin-top: .25rem;
+}
+
+/* Transition Appear */
+.v-enter-active,
+.v-leave-active {
+    transition: opacity 0.7s ease, transform 1s ease, height 0.5s ease, margin 0.5s ease, padding 0.5s ease;
+}
+
+.v-enter-to,
+.v-leave-from {
+    transform: translateY(0);
+}
+
+.v-enter-from,
+.v-leave-to {
+    opacity: 0;
+}
+
+.v-leave-to {
+    transform: translateY(-200%);
+    height: 0;
+    margin-bottom: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+    overflow: hidden;
+    border-width: 0;
 }
 </style>

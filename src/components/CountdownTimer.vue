@@ -51,7 +51,7 @@ export default {
 </script>
   
 <template>
-    <div class="sticky top-0 z-20 opacity-[97%] shadow-lg" :style="'background:' + countdownColors.countdownBg">
+    <div class="sticky flex flex-col grow top-0 right-0 z-20 opacity-[97%] shadow-lg" :style="'background:' + countdownColors.countdownBg">
         <div class="flex gap-5 items-center justify-center max-w-xl mx-auto px-4 py-3" :style="'color:' + countdownColors.text">
             <h2 class="text-3xl lg:text-3xl font-bold font-mono tracking-tight">{{ timerOutput }}</h2>
 
