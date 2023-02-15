@@ -3,9 +3,9 @@ import CheckoutView from '@/views/Checkout/Checkout.vue';
 import CheckoutBuilderView from '@/views/CheckoutBuilder/Builder.vue';
 
 const routes = [
-  {
-    path: '/:catchAll(.*)', redirect: 'checkout'
-  },
+  /*   {
+      path: '/:catchAll(.*)', redirect: 'checkout'
+    }, */
   {
     path: '/checkout',
     name: 'Checkout',
