@@ -540,20 +540,20 @@ export default {
 
                         <!-- Email autosuggest -->
                         <transition appear>
-                            <div v-if="this.ShowEmailAutoSuggest == true" class="w-full rounded-md bg-gray-50 border border-slate-400 shadow-lg absolute overflow-hidden top-100 z-40 mt-1">
+                            <div v-if="ShowEmailAutoSuggest" class="w-full rounded-md bg-gray-50 border border-slate-400 shadow-lg absolute overflow-hidden top-100 z-40 mt-1">
                                 <template v-for="sug in EmailSuggest">
                                     <li
                                         @click.stop.prevent="SelectEmailSuggest(sug)"
                                         class="pr-3 pl-8 py-2.5 text-sm font-medium text-gray-600 list-none cursor-pointer hover:bg-indigo-100 hover:text-slate-700 transition duration-600">
-                                        {{ this.email.split('@')[0] + '@' + sug }}
+                                        {{ email.split('@')[0] + '@' + sug }}
                                     </li>
                                 </template>
                             </div>
                         </transition>
 
                     </div>
-                    <div v-if="this.EmailIsValid == false" class="checkout-invalid-feedback">
-                        {{ this.EmailErrorMessage }}
+                    <div v-if="!EmailIsValid" class="checkout-invalid-feedback">
+                        {{ EmailErrorMessage }}
                     </div>
                 </div>
 
@@ -563,7 +563,7 @@ export default {
                         <SelectCountryFlags />
                         <div :class="Classes.containerInputIcon">
                             <input
-                                :class="[{ 'input-has-error': this.PhoneIsValid == false }, Classes.input, 'pl-8 rounded-l-none rounded-r-md']"
+                                :class="[{ 'input-has-error': !PhoneIsValid }, Classes.input, 'pl-8 rounded-l-none rounded-r-md']"
                                 v-model="phone"
                                 autocomplete="phone"
                                 @input="ValidatePhone(phone)"
@@ -575,15 +575,15 @@ export default {
                             <div v-html="icons.phone" :class="Classes.containerIcon"></div>
                         </div>
                     </div>
-                    <div v-if="this.PhoneIsValid == false" class="checkout-invalid-feedback">
-                        {{ this.PhoneErrorMessage }}
+                    <div v-if="!PhoneIsValid" class="checkout-invalid-feedback">
+                        {{ PhoneErrorMessage }}
                     </div>
                 </div>
 
                 <div class="lg:col-span-1">
                     <label :class="Classes.label"> CPF: </label>
                     <input
-                        :class="[{ 'input-has-error': this.CpfIsValid == false }, Classes.input]"
+                        :class="[{ 'input-has-error': !CpfIsValid }, Classes.input]"
                         v-model="doc"
                         @input="ValidateCPF(doc)"
                         v-maska
@@ -591,8 +591,8 @@ export default {
                         required
                         inputmode="tel"
                         type="text" />
-                    <div v-if="this.CpfIsValid == false" class="checkout-invalid-feedback">
-                        {{ this.CpfErrorMessage }}
+                    <div v-if="!CpfIsValid" class="checkout-invalid-feedback">
+                        {{ CpfErrorMessage }}
                     </div>
                 </div>
 
