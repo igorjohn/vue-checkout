@@ -49,6 +49,24 @@ const maskName = {
     }
 }
 
+const maskCardHolder = {
+    tokens: {
+        A: {
+            multiple: true,
+            transform: chr => chr.toUpperCase()
+        }
+    }
+}
+
+const maskPhone = {
+    tokens: {
+        N: {
+            multiple: false,
+            pattern: /[1-9]/
+        }
+    }
+}
+
 const maskEmail = {
     tokens: {
         a: {
@@ -73,6 +91,12 @@ const maskEmail = {
 import BannerImg from '@/assets/img/mock/checkout-banner.png';
 import OrderBump01 from '@/assets/img/mock/orderbump-01.jpeg';
 import OrderBump02 from '@/assets/img/mock/orderbump-02.jpeg';
+
+import Badges from "@/components/Badges.vue";
+import CountdownTimer from "@/components/CountdownTimer.vue";
+import FooterDisclaimer from "@/components/FooterDisclaimer.vue";
+import FooterPaymentLabels from "@/components/FooterPaymentLabels.vue";
+import OrderBump from "@/components/OrderBump.vue";
 
 import SelectCountryFlags from "@/components/SelectCountryFlags.vue";
 import CreditCardSavedData from "@/components/SavedCreditCard.vue";
@@ -163,21 +187,6 @@ export default {
             },
 
             icons: {
-                user: `
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" />
-        </svg>`,
-
-                email: `
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" />
-        </svg>`,
-
-                phone: `
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 002.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 01-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 00-1.091-.852H4.5A2.25 2.25 0 002.25 4.5v2.25z" />
-        </svg>`,
-
                 card: `
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 8.25h19.5M2.25 9h19.5m-16.5 5.25h6m-6 2.25h3m-3.75 3h15a2.25 2.25 0 002.25-2.25V6.75A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25v10.5A2.25 2.25 0 004.5 19.5z" />
@@ -228,12 +237,6 @@ export default {
             <path fill-rule="evenodd" d="M9.661 2.237a.531.531 0 01.678 0 11.947 11.947 0 007.078 2.749.5.5 0 01.479.425c.069.52.104 1.05.104 1.59 0 5.162-3.26 9.563-7.834 11.256a.48.48 0 01-.332 0C5.26 16.564 2 12.163 2 7c0-.538.035-1.069.104-1.589a.5.5 0 01.48-.425 11.947 11.947 0 007.077-2.75zm4.196 5.954a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z" clip-rule="evenodd" />
         </svg>`,
 
-                orderBumpArrow: `
-        <svg version="1.0" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 690 512" preserveAspectRatio="xMidYMid meet" class="text-[#dc2626] w-8 pb-[0.15rem]" fill="currentColor">
-            <g xmlns="http://www.w3.org/2000/svg">
-                <path d="m596.39 279.65c-0.0625-3.1133-1.4961-6.1758-3.8516-8.2227l-156.8-134.33c-3.2383-2.8125-8.1562-3.5117-12.051-1.7148-3.8945 1.7969-6.5469 5.9961-6.5 10.285v67.164h-302.39c-5.8633 0-11.199 5.332-11.199 11.195v111.94c0 5.8594 5.3359 11.191 11.199 11.195h302.39v67.164c-0.042968 4.2852 2.6055 8.4844 6.5 10.285 3.8945 1.7969 8.8125 1.0977 12.051-1.7148l156.8-134.32c2.5312-2.1953 3.9883-5.5742 3.8516-8.918z"></path>
-            </g>
-        </svg>`,
             },
 
 
@@ -266,36 +269,6 @@ export default {
                 ]
             },
 
-            OrderBumpProducts: [
-                {
-                    productId: 10012,
-                    img: OrderBump01,
-                    hasCustomText: true,
-                    text: {
-                        h1: 'Seja um Chef Foda!',
-                        p: 'Compre este curso e aprenda todas as receitas que você sempre quis. Para amadores e profissionais que desejam aprender dotes culinários e crescer seu negócio.'
-                    },
-                    price: {
-                        fake: 'R$ 899,90',
-                        real: 'R$ 97,00'
-                    }
-                },
-                {
-                    productId: 10532,
-                    img: OrderBump02,
-                    hasCustomText: true,
-                    text: {
-                        h1: 'Conquiste uma nova profissão, com renda de até R$ 8.998,97',
-                        p: 'Aprenda tudo que você precisa para se tornar o eletricista que o mercado precisa.'
-                    },
-                    price: {
-                        fake: 'R$ 346,90',
-                        real: 'R$ 72,00'
-                    }
-                },
-
-            ],
-
             hasSavedCards: false,
 
             // Validação - Nome
@@ -320,6 +293,18 @@ export default {
             CpfErrorMessage: '',
             doc: '',
 
+            // Validação - Card holder
+            cardHolderIsValid: null,
+            cardHolderErrorMessage: '',
+            cardHolder: '',
+
+            // Validação - Card Expiration date
+            cardExpirationDateIsValid: null,
+            cardExpirationDateErrorMessage: '',
+            cardExpirationDate: null,
+            cardExpirationMonth: null,
+            cardExpirationYear: null,
+
         }
     },
     methods: {
@@ -333,10 +318,7 @@ export default {
             this.NameIsValid = false;
             this.NameErrorMessage = 'Digite o seu nome completo.'
 
-            if (val == '' || !val) {
-                this.NameIsValid = false;
-                this.NameErrorMessage = 'Este campo é obrigatório.'
-            }
+            if (val == '' || !val) this.NameErrorMessage = 'Este campo é obrigatório.';
 
             if (val.length > 0 && val.length >= 4) this.NameIsValid = false;
             if (val.length > 4) this.NameIsValid = true;
@@ -353,9 +335,7 @@ export default {
                 'live.com'
             ]
 
-            if (!mail.includes('@')) {
-                this.ShowEmailAutoSuggest = false;
-            }
+            if (!mail.includes('@')) this.ShowEmailAutoSuggest = false;
 
             if (mail.includes('@')) {
                 this.ShowEmailAutoSuggest = true;
@@ -366,6 +346,10 @@ export default {
                 const domain = RegExp(`.*${query.toLowerCase().split('').join('.*')}.*`)
                 const matches = EmailDomains.filter(v => v.toLowerCase().match(domain))
 
+                //const matches = EmailDomains.map(e => e.toLowerCase().indexOf(query) > -1);
+
+                console.log(matches)
+                console.log(query)
                 this.EmailSuggest = matches;
             }
 
@@ -386,9 +370,14 @@ export default {
             }
         },
 
+        SelectEmailSuggest(suggested) {
+            this.ShowEmailAutoSuggest = false;
+            this.email = this.email.split('@')[0] + '@' + suggested;
+            this.EmailIsValid = true;
+        },
+
         ValidatePhone(phone) {
             this.PhoneIsValid = false;
-
             let phoneNumbers = phone.replace(/[\s.,-,/(,/)]*/igm, '');
 
             if (phoneNumbers.length >= 10) {
@@ -414,32 +403,20 @@ export default {
                     return false;
                 }
 
-                for (let i = 1; i <= 9; i++) {
-                    Soma = Soma + parseInt(strCPF.substring(i - 1, i)) * (11 - i);
-                }
+                for (let i = 1; i <= 9; i++) { Soma = Soma + parseInt(strCPF.substring(i - 1, i)) * (11 - i) }
 
                 var Resto = (Soma * 10) % 11;
-                if ((Resto === 10) || (Resto === 11)) {
-                    Resto = 0;
-                }
+                if ((Resto === 10) || (Resto === 11)) { Resto = 0 }
 
-                if (Resto !== parseInt(strCPF.substring(9, 10))) {
-                    return false;
-                }
+                if (Resto !== parseInt(strCPF.substring(9, 10))) { return false }
 
                 Soma = 0;
-                for (let k = 1; k <= 10; k++) {
-                    Soma = Soma + parseInt(strCPF.substring(k - 1, k)) * (12 - k)
-                }
+                for (let k = 1; k <= 10; k++) { Soma = Soma + parseInt(strCPF.substring(k - 1, k)) * (12 - k) }
 
                 Resto = (Soma * 10) % 11;
-                if ((Resto === 10) || (Resto === 11)) {
-                    Resto = 0;
-                }
+                if ((Resto === 10) || (Resto === 11)) { Resto = 0 }
 
-                if (Resto !== parseInt(strCPF.substring(10, 11))) {
-                    return false;
-                }
+                if (Resto !== parseInt(strCPF.substring(10, 11))) { return false }
 
                 return true;
             }
@@ -448,17 +425,29 @@ export default {
             if (isCpfValid() == true) this.CpfIsValid = true;
         },
 
+        ValidateCardHolder(val) {
+            this.cardHolderIsValid = false;
+            this.cardHolderErrorMessage = 'Digite o nome do titular do cartão.';
 
-        SelectEmailSuggest(suggested) {
-            this.ShowEmailAutoSuggest = false;
-            this.email = this.email.split('@')[0] + '@' + suggested;
+            if (val == '' || !val) this.cardHolderErrorMessage = 'Este campo é obrigatório.';
 
-            this.EmailIsValid = true;
+            if (val.length > 8 && val.split(' ').length >= 2) this.cardHolderIsValid = true;
         },
+
+        ValidateCardExpirationDate(month, year) {
+            this.cardExpirationDateIsValid = false;
+            this.cardExpirationDateErrorMessage = 'Data inválida.';
+
+            const currentMonth = new Date().getMonth() + 1;
+            const currentYear = new Date().getFullYear();
+
+            if (year && month && year > currentYear) this.cardExpirationDateIsValid = true;
+            if (year && month && year == currentYear && month > currentMonth) this.cardExpirationDateIsValid = true;
+        },
+
 
         checkSavedCards(event) {
             event ? this.hasSavedCards = true : this.hasSavedCards = false;
-
         }
     },
     mounted() {
@@ -468,7 +457,6 @@ export default {
 </script>
 
 <template>
-    <!-- Top message -->
     <div class="w-full flex gap-2 lg:gap-3 items-center justify-center bg-slate-800 px-4 py-2.5">
         <div class="rounded-full w-4 h-4 lg:w-5 lg:h-5 aspect-square bg-green-600 text-white flex items-center justify-center">
             <div v-html="icons.lock" class="w-2.5 h-2.5 lg:w-3 lg:h-3"></div>
@@ -483,6 +471,7 @@ export default {
             <img :src="BannerImg" class="w-full rounded-lg" />
             <!-- Payment form container -->
             <div :class="Classes.containerPayment">
+
                 <!-- Você está adquirindo -->
                 <div class="rounded-md lg:col-span-2 px-3 lg:px-5 py-3.5 lg:py-4 border border-zinc-200 mb-3">
                     <div class="w-full font-bold tracking-tight text-xs uppercase text-indigo-500">
@@ -500,84 +489,69 @@ export default {
                     </div>
                 </div>
 
-
                 <CheckoutStep :hasNumber="true" :StepNumber="1" title="Suas informações" />
 
                 <div class="lg:col-span-2">
                     <label :class="Classes.label"> Nome completo: </label>
-                    <div :class="Classes.containerInputIcon">
-                        <input
-                            @input="ValidateName(name)"
-                            v-model="name"
-                            autocomplete="name"
-                            v-maska:[maskName]
-                            data-maska="Aa a a a a"
-                            :class="[{ 'input-has-error': NameIsValid == false }, Classes.input, 'pl-8']"
-                            required
-                            inputmode="text"
-                            type="text" />
-                        <div v-html="icons.user" :class="Classes.containerIcon"></div>
-                    </div>
-                    <div v-if="NameIsValid == false" class="checkout-invalid-feedback">
-                        {{ NameErrorMessage }}
-                    </div>
+                    <input
+                        @input="ValidateName(name)"
+                        v-model="name"
+                        autocomplete="name"
+                        v-maska:[maskName]
+                        data-maska="Aa a a a a"
+                        :class="[{ 'input-has-error': NameIsValid == false }, Classes.input, 'pepper-input icon-user']"
+                        required
+                        inputmode="text"
+                        type="text" />
+                    <div v-if="NameIsValid == false" class="checkout-invalid-feedback"> {{ NameErrorMessage }} </div>
                 </div>
 
-                <div class="lg:col-span-2">
+                <div class="lg:col-span-2 relative">
                     <label :class="Classes.label"> Digite seu e-mail: </label>
-                    <div :class="Classes.containerInputIcon">
-                        <input
-                            :class="[{ 'input-has-error': EmailIsValid == false }, Classes.input, 'pl-8']"
-                            v-model="email"
-                            autocomplete="email"
-                            @keyup="ValidateEmail(email)"
-                            v-maska:[maskEmail]
-                            data-maska="aab"
-                            required
-                            inputmode="email"
-                            type="email" />
-                        <div v-html="icons.email" :class="Classes.containerIcon"></div>
+                    <input
+                        :class="[{ 'input-has-error': EmailIsValid == false }, Classes.input, 'pepper-input icon-email']"
+                        v-model="email"
+                        autocomplete="email"
+                        @keyup="ValidateEmail(email)"
+                        v-maska:[maskEmail]
+                        data-maska="aab"
+                        required
+                        inputmode="email"
+                        @keyup.enter="SelectEmailSuggest(EmailSuggest[0])"
+                        type="email" />
 
-                        <!-- Email autosuggest -->
-                        <transition appear>
-                            <div v-if="ShowEmailAutoSuggest" class="w-full rounded-md bg-gray-50 border border-slate-400 shadow-lg absolute overflow-hidden top-100 z-40 mt-1">
-                                <template v-for="sug in EmailSuggest">
-                                    <li
-                                        @click.stop.prevent="SelectEmailSuggest(sug)"
-                                        class="pr-3 pl-8 py-2.5 text-sm font-medium text-gray-600 list-none cursor-pointer hover:bg-indigo-100 hover:text-slate-700 transition duration-600">
-                                        {{ email.split('@')[0] + '@' + sug }}
-                                    </li>
-                                </template>
-                            </div>
-                        </transition>
-
-                    </div>
-                    <div v-if="EmailIsValid == false" class="checkout-invalid-feedback">
-                        {{ EmailErrorMessage }}
-                    </div>
+                    <!-- Email autosuggest -->
+                    <transition appear>
+                        <div v-if="ShowEmailAutoSuggest && EmailSuggest.length > 0" class="w-full rounded-md bg-gray-50 border border-slate-400 shadow-lg absolute overflow-hidden top-100 z-40 mt-1">
+                            <template v-for="sug in EmailSuggest">
+                                <li @click.stop.prevent="SelectEmailSuggest(sug)"
+                                    :class="sug == EmailSuggest[0] ? 'font-semibold bg-indigo-50 text-slate-700' : 'font-medium text-gray-600 hover:bg-indigo-100 hover:text-slate-700'"
+                                    class="pr-3 pl-8 py-2.5 text-sm list-none cursor-pointer transition duration-600">
+                                    {{ email.split('@')[0] + '@' + sug }}
+                                </li>
+                            </template>
+                        </div>
+                    </transition>
+                    <div v-if="EmailIsValid == false" class="checkout-invalid-feedback"> {{ EmailErrorMessage }} </div>
                 </div>
 
                 <div class="lg:col-span-1">
                     <label :class="Classes.label"> Celular: </label>
                     <div class="flex flex-row">
                         <SelectCountryFlags />
-                        <div :class="Classes.containerInputIcon">
-                            <input
-                                :class="[{ 'input-has-error': PhoneIsValid == false }, Classes.input, 'pl-8 rounded-l-none rounded-r-md']"
-                                v-model="phone"
-                                autocomplete="phone"
-                                @input="ValidatePhone(phone)"
-                                v-maska
-                                data-maska="['(##) #### ####', '(##) ##### ####']"
-                                required
-                                inputmode="tel"
-                                type="text" />
-                            <div v-html="icons.phone" :class="Classes.containerIcon"></div>
-                        </div>
+                        <input
+                            :class="[{ 'input-has-error': PhoneIsValid == false }, Classes.input, 'pepper-input icon-phone rounded-l-none rounded-r-md']"
+                            v-model="phone"
+                            autocomplete="phone"
+                            @input="ValidatePhone(phone)"
+                            v-maska
+                            v-maska:[maskPhone]
+                            data-maska="['(NN) N### ####', '(NN) N#### ####']"
+                            required
+                            inputmode="tel"
+                            type="text" />
                     </div>
-                    <div v-if="PhoneIsValid == false" class="checkout-invalid-feedback">
-                        {{ PhoneErrorMessage }}
-                    </div>
+                    <div v-if="PhoneIsValid == false" class="checkout-invalid-feedback"> {{ PhoneErrorMessage }} </div>
                 </div>
 
                 <div class="lg:col-span-1">
@@ -591,30 +565,28 @@ export default {
                         required
                         inputmode="tel"
                         type="text" />
-                    <div v-if="CpfIsValid == false" class="checkout-invalid-feedback">
-                        {{ CpfErrorMessage }}
-                    </div>
+                    <div v-if="CpfIsValid == false" class="checkout-invalid-feedback"> {{ CpfErrorMessage }} </div>
                 </div>
 
                 <!--  <div class="lg:col-span-2 pt-4">
-                    <div class="w-full rounded bg-gray-50 border border-gray-150 hover:border-indigo-300 transition duration-700">
-                        <div @click="isOpenDiscountCoupon = !isOpenDiscountCoupon" class="flex gap-2 px-3 py-3.5 items-center justify-between cursor-pointer">
-                            <div class="inline-flex gap-2 items-center justify-start">
-                                <div v-html="icons.ticket" class="w-4 h-4 text-slate-500 rotate-[325deg]"></div>
-                                <span class="text-sm text-indigo-500 font-medium">Tem um cupom de desconto?</span>
-                            </div>
-                            <div class="inline-flex items-center justify-center ml-auto mr-1 transition duration-500">
-                                <span v-html="icons.chevronDown" :class="[isOpenDiscountCoupon ? 'rotate-180' : 'rotate-0', 'w-4 h-4']"></span>
-                            </div>
-                        </div>
-                        <div v-if="isOpenDiscountCoupon" class="flex items-center justify-start gap-1 transition duration-500 w-full px-4 pb-4">
-                            <input :class="Classes.discount.input" type="text" required inputmode="text" placeholder="Digite o código do cupom" />
-                            <button :class="Classes.discount.button">
-                                Aplicar
-                            </button>
-                        </div>
-                    </div>
-                </div> -->
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    <div class="w-full rounded bg-gray-50 border border-gray-150 hover:border-indigo-300 transition duration-700">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        <div @click="isOpenDiscountCoupon = !isOpenDiscountCoupon" class="flex gap-2 px-3 py-3.5 items-center justify-between cursor-pointer">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            <div class="inline-flex gap-2 items-center justify-start">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                <div v-html="icons.ticket" class="w-4 h-4 text-slate-500 rotate-[325deg]"></div>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                <span class="text-sm text-indigo-500 font-medium">Tem um cupom de desconto?</span>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            </div>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            <div class="inline-flex items-center justify-center ml-auto mr-1 transition duration-500">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                <span v-html="icons.chevronDown" :class="[isOpenDiscountCoupon ? 'rotate-180' : 'rotate-0', 'w-4 h-4']"></span>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            </div>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        </div>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        <div v-if="isOpenDiscountCoupon" class="flex items-center justify-start gap-1 transition duration-500 w-full px-4 pb-4">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            <input :class="Classes.discount.input" type="text" required inputmode="text" placeholder="Digite o código do cupom" />
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            <button :class="Classes.discount.button">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                Aplicar
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            </button>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        </div>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    </div>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                </div> -->
 
                 <CheckoutStep :hasNumber="true" :StepNumber="2" title="Dados de pagamento" class="mt-4" />
 
@@ -624,23 +596,19 @@ export default {
                 <div class="flex justify-start gap-x-2 lg:col-span-2" v-if="!hasSavedCards">
                     <button
                         @click="paymentCreditCard"
-                        :class="[Classes.tabs.default, tab == 1 ? Classes.tabs.selected : Classes.tabs.notSelected]">
-                        <div class="inline-flex items-center justify-center lg:justify-start h-6 w-auto">
-                            <span v-html="icons.card" class='w-6'></span>
-                        </div>
+                        :class="[Classes.tabs.default, tab == 1 ? Classes.tabs.selected : Classes.tabs.notSelected, 'flex flex-col lg:flex-row items-center justify-center tracking-tight']">
+                        <span v-html="icons.card" class='w-6 h-6 lg:w-5 flex items-center'></span>
                         Cartão
                     </button>
                     <button
                         @click="paymentPix"
-                        :class="[Classes.tabs.default, tab == 2 ? Classes.tabs.selected : Classes.tabs.notSelected]">
-                        <div class="inline-flex items-center justify-center lg:justify-start h-6 w-auto">
-                            <span v-html="icons.pix" class='w-5'></span>
-                        </div>
+                        :class="[Classes.tabs.default, tab == 2 ? Classes.tabs.selected : Classes.tabs.notSelected, 'flex flex-col lg:flex-row items-center justify-center tracking-tight']">
+                        <span v-html="icons.pix" class='w-5 h-6 lg:w-[17px] flex items-center'></span>
                         PIX
                     </button>
                     <button
                         @click="paymentBillet"
-                        :class="[Classes.tabs.default, tab == 3 ? Classes.tabs.selected : Classes.tabs.notSelected]">
+                        :class="[Classes.tabs.default, tab == 3 ? Classes.tabs.selected : Classes.tabs.notSelected, 'flex flex-col lg:flex-row items-center justify-center tracking-tight']">
                         <div class="inline-flex items-center justify-center lg:justify-start h-6 w-auto">
                             <img class="w-7" src="https://img6.wsimg.com/fos/react/icons/115/gd/sprite.svg#boleto" />
                         </div>
@@ -649,59 +617,60 @@ export default {
                 </div>
 
                 <!-- Credit card Tab -->
-                <div class="lg:col-span-2 grid grid-cols-3 gap-3 gap-x-2 my-2" v-if="!hasSavedCards">
+                <div class="lg:col-span-2 grid grid-cols-3 gap-3 gap-x-2 my-2" v-if="hasSavedCards && tab === 1">
                     <div class="col-span-3">
-                        <label :class="Classes.label">
-                            Número do cartão:
-                        </label>
-                        <div :class="Classes.containerInputIcon">
-                            <input :class="Classes.input" required inputmode="tel" type="text" v-maska data-maska="#### #### #### ####" />
-                        </div>
+                        <label :class="Classes.label"> Número do cartão: </label>
+                        <input :class="Classes.input" required inputmode="tel" type="text" v-maska data-maska="#### #### #### ####" />
                     </div>
 
                     <div class="col-span-3">
-                        <label :class="Classes.label">
-                            Nome impresso no cartão:
-                        </label>
-                        <div :class="Classes.containerInputIcon">
-                            <input :class="Classes.input" required inputmode="text" type="text" v-maska data-maska="A A A A A" data-maska-tokens="A:[A-Z]:multiple" />
+                        <label :class="Classes.label"> Nome impresso no cartão: </label>
+                        <input
+                            @input="ValidateCardHolder(cardHolder)"
+                            v-model="cardHolder"
+                            autocomplete="cardHolder"
+                            v-maska:[maskCardHolder]
+                            data-maska="A A A A"
+                            :class="[{ 'input-has-error': cardHolderIsValid == false }, Classes.input]"
+                            required
+                            inputmode="text"
+                            type="text" />
+                        <div v-if="cardHolderIsValid == false" class="checkout-invalid-feedback"> {{ cardHolderErrorMessage }} </div>
+                    </div>
+
+                    <div class="col-span-1">
+                        <label :class="Classes.label"> Mês: </label>
+                        <select
+                            required
+                            :class="[Classes.input, { 'text-gray-400': !expirationMonth, 'border-red-500 focus:border-red-500': expirationMonth !== null && expirationYear !== null && cardExpirationDateIsValid == false }]"
+                            v-model="expirationMonth"
+                            @change="ValidateCardExpirationDate(expirationMonth, expirationYear)">
+                            <option :value="null" disabled>Mês</option>
+                            <template v-for="m in CreditCard.expMonth">
+                                <option :value="(m.month).toString().padStart(2, '0')">{{ (m.month).toString().padStart(2, '0') }}</option>
+                            </template>
+                        </select>
+                        <div v-if="expirationMonth !== null && expirationYear !== null && cardExpirationDateIsValid == false" class="checkout-invalid-feedback">
+                            {{ cardExpirationDateErrorMessage }}
                         </div>
                     </div>
 
                     <div class="col-span-1">
-                        <label :class="Classes.label">
-                            Mês:
-                        </label>
-                        <div class="relative w-full">
-                            <select required :class="Classes.input" v-model="expirationMonth">
-                                <template v-for="m in CreditCard.expMonth">
-                                    <option :value="(m.month).toString().padStart(2, '0')">{{ (m.month).toString().padStart(2, '0') }}</option>
-                                </template>
-                            </select>
-                            <!-- 'Placeholder' -->
-                            <span v-if="!expirationMonth" class="absolute block z-2 top-0 left-0 text-sm h-full px-3 flex items-center text-gray-400">Mês</span>
-                        </div>
+                        <label :class="Classes.label"> Ano: </label>
+                        <select
+                            required
+                            :class="[Classes.input, { 'text-gray-400': !expirationYear, 'border-red-500 focus:border-red-500': expirationMonth !== null && expirationYear !== null && cardExpirationDateIsValid == false }]"
+                            v-model="expirationYear"
+                            @change="ValidateCardExpirationDate(expirationMonth, expirationYear)">
+                            <option :value="null" disabled>Ano</option>
+                            <template v-for="y in CreditCard.expYear">
+                                <option :value="y.year">{{ y.year }}</option>
+                            </template>
+                        </select>
                     </div>
 
                     <div class="col-span-1">
-                        <label :class="Classes.label">
-                            Ano:
-                        </label>
-                        <div class="relative w-full">
-                            <select required :class="Classes.input" v-model="expirationYear">
-                                <template v-for="y in CreditCard.expYear">
-                                    <option :value="y.year">{{ y.year }}</option>
-                                </template>
-                            </select>
-                            <!-- 'Placeholder' -->
-                            <span v-if="!expirationYear" class="absolute block z-2 top-0 left-0 text-sm h-full px-3 flex items-center text-gray-400">Ano</span>
-                        </div>
-                    </div>
-
-                    <div class="col-span-1">
-                        <label :class="Classes.label">
-                            CVV:
-                        </label>
+                        <label :class="Classes.label"> CVV: </label>
                         <div :class="Classes.containerInputIcon">
                             <input :class="[Classes.input, 'pl-8']" required maxlength="4" inputmode="tel" type="text" v-maska data-maska="####" />
                             <div v-html="icons.lock" class="w-4 absolute top-0 left-0 h-[36px] flex items-center justify-center mx-2 text-slate-500 z-10"></div>
@@ -709,9 +678,7 @@ export default {
                     </div>
 
                     <div class="col-span-3">
-                        <label :class="Classes.label">
-                            Parcelamento:
-                        </label>
+                        <label :class="Classes.label"> Parcelamento: </label>
                         <Listbox v-model="selectedInstallment">
                             <div class="relative mt-1">
                                 <ListboxButton
@@ -785,46 +752,14 @@ export default {
 
                 <CheckoutStep :hasNumber="false" title="Aproveite também com descontos incríveis:" class="mt-4" />
 
-                <div class="lg:col-span-2 my-2">
-
-                    <!-- Order bump -->
-                    <template v-for="ob in OrderBumpProducts">
-                        <label :class="Classes.orderBump.label">
-                            <span :class="Classes.orderBump.titleWrapper">
-                                <div v-html="icons.orderBumpArrow"></div>
-                                <span :class="Classes.orderBump.title">
-                                    Sim, quero levar também!
-                                </span>
-                            </span>
-                            <div :class="Classes.orderBump.bodyWrapper">
-                                <input type="checkbox" :class="Classes.orderBump.checkbox" />
-                                <img :src="ob.img" :class="Classes.orderBump.image" />
-                                <div>
-                                    <span :class="Classes.orderBump.h1">
-                                        {{ ob.text.h1 }}
-                                    </span>
-                                    <span :class="Classes.orderBump.p">
-                                        {{ ob.text.p }}
-                                    </span>
-                                    <span :class="Classes.orderBump.price">
-                                        De <span class="line-through">{{ ob.price.fake }}</span> por {{ ob.price.real }}
-                                    </span>
-                                </div>
-                            </div>
-                        </label>
-                    </template>
-                    <!-- End Order bump -->
+                <div class="lg:col-span-2">
+                    <OrderBump />
                 </div>
 
                 <div class="lg:col-span-2">
                     <span class="text-base text-indigo-600 font-bold tracking-tight block md:text-right mb-2">
                         Valor total: 12x de R$ 22,70 no cartão
                     </span>
-
-                    <!-- 
-                        ou R$ 197,00 à vista
-                     -->
-
                 </div>
 
                 <!-- Buy Button -->
@@ -835,26 +770,27 @@ export default {
                     <span class="block mt-4 text-center text-xs font-medium tracking-wide text-slate-400">
                         Você está em um ambiente seguro.
                     </span>
-                </div>
-            </div>
 
-            <div class="flex gap-5 lg:gap-6 xl:gap-8 flex-col md:flex-row items-center justify-center mt-6 mb-4">
-                <div class="flex items-center gap-2 text-sm font-semibold text-slate-600 tracking-tight">
-                    <div v-html="icons.lock" class="w-4 h-4 text-slate-600 mt[-2px]"></div>
-                    Pagamento seguro
-                </div>
-                <div class="flex flex-row items-center">
-                    <img :class="Classes.footerFlagImg" alt="visa" src="https://img6.wsimg.com/fos/react/icons/115/gd/sprite.svg#visa" />
-                    <img :class="Classes.footerFlagImg" alt="mastercard" src="https://img6.wsimg.com/fos/react/icons/115/gd/sprite.svg#mastercard" />
-                    <img :class="Classes.footerFlagImg" alt="elo" src="https://img6.wsimg.com/fos/react/icons/115/gd/sprite.svg#elo" />
-                    <img :class="Classes.footerFlagImg" alt="hipercard" src="https://img6.wsimg.com/fos/react/icons/115/gd/sprite.svg#hipercard" />
-                    <img :class="Classes.footerFlagImg" alt="amex" src="https://img6.wsimg.com/fos/react/icons/115/gd/sprite.svg#amex" />
-                    <img :class="Classes.footerFlagImg" alt="discover" src="https://img6.wsimg.com/fos/react/icons/115/gd/sprite.svg#discover" />
-                    <img :class="Classes.footerFlagImg" alt="jcb" src="https://img6.wsimg.com/fos/react/icons/115/gd/sprite.svg#jcb" />
-                    <div :class="Classes.footerFlagImg" alt="pix" class="aspect-video flex items-center justify-center bg-white rounded-[2px] border-2 border-[#d4dbe0]">
-                        <span v-html="icons.pix" class='w-4 h-4'></span>
+
+                    <div class="flex gap-5 lg:gap-6 xl:gap-8 flex-col md:flex-row items-center justify-center mt-6 mb-4">
+                        <div class="flex items-center gap-2 text-sm font-semibold text-slate-600 tracking-tight">
+                            <div v-html="icons.lock" class="w-4 h-4 text-slate-600 mt[-2px]"></div>
+                            Pagamento seguro
+                        </div>
+                        <div class="flex flex-row items-center">
+                            <img :class="Classes.footerFlagImg" alt="visa" src="https://img6.wsimg.com/fos/react/icons/115/gd/sprite.svg#visa" />
+                            <img :class="Classes.footerFlagImg" alt="mastercard" src="https://img6.wsimg.com/fos/react/icons/115/gd/sprite.svg#mastercard" />
+                            <img :class="Classes.footerFlagImg" alt="elo" src="https://img6.wsimg.com/fos/react/icons/115/gd/sprite.svg#elo" />
+                            <img :class="Classes.footerFlagImg" alt="hipercard" src="https://img6.wsimg.com/fos/react/icons/115/gd/sprite.svg#hipercard" />
+                            <img :class="Classes.footerFlagImg" alt="amex" src="https://img6.wsimg.com/fos/react/icons/115/gd/sprite.svg#amex" />
+                            <img :class="Classes.footerFlagImg" alt="discover" src="https://img6.wsimg.com/fos/react/icons/115/gd/sprite.svg#discover" />
+                            <img :class="Classes.footerFlagImg" alt="jcb" src="https://img6.wsimg.com/fos/react/icons/115/gd/sprite.svg#jcb" />
+                            <div :class="Classes.footerFlagImg" alt="pix" class="aspect-video flex items-center justify-center bg-white rounded-[2px] border-2 border-[#d4dbe0]">
+                                <span v-html="icons.pix" class='w-4 h-4'></span>
+                            </div>
+                            <img :class="Classes.footerFlagImg" alt="boleto" src="https://img6.wsimg.com/fos/react/icons/115/gd/sprite.svg#boleto" />
+                        </div>
                     </div>
-                    <img :class="Classes.footerFlagImg" alt="boleto" src="https://img6.wsimg.com/fos/react/icons/115/gd/sprite.svg#boleto" />
                 </div>
             </div>
         </div>
@@ -895,66 +831,10 @@ export default {
             </div>
 
             <!-- Footer disclaimer -->
-            <div class="mt-4 flex flex-col gap-3 xl:gap-2">
-                <span class="text-xs text-gray-500 block">
-                    Esta compra é processada por Pepper Tecnologia e Pagamentos Ltda. *Taxa de 2,99% a.m.
-                </span>
-                <span class="text-xs text-gray-500 block">
-                    Ao continuar nesta compra, você concorda com os
-                    <a href="#" class="text-gray-600 hover:text-indigo-600 transition duration-500">Termos de uso e privacidade</a>
-                </span>
-                <span class="text-xs text-gray-500 flex gap-1">
-                    Dúvidas? Entre em contato com o produtor:
-                    <a href="mailto:contato@produtor" class="text-xs underline text-gray-600 font-medium hover:text-indigo-500 transition duration-500">contato@produtor.uy</a>
-                </span>
-            </div>
+            <FooterDisclaimer />
 
         </div>
     </div>
-
-    <TransitionRoot appear :show="openLoader" as="template">
-        <Dialog as="div" @close="closeLoader" class="relative z-50">
-            <TransitionChild
-                as="template"
-                enter="duration-300 ease-out"
-                enter-from="opacity-0"
-                enter-to="opacity-100"
-                leave="duration-200 ease-in"
-                leave-from="opacity-100"
-                leave-to="opacity-0">
-                <div @click="closeLoader" class="fixed inset-0 bg-zinc-50 bg-opacity-90"></div>
-            </TransitionChild>
-            <div class="fixed inset-0 overflow-y-auto">
-                <div class="flex min-h-full items-center justify-center p-4 text-center">
-                    <TransitionChild
-                        as="template"
-                        enter="duration-300 ease-out"
-                        enter-from="opacity-0 scale-95"
-                        enter-to="opacity-100 scale-100"
-                        leave="duration-200 ease-in"
-                        leave-from="opacity-100 scale-100"
-                        leave-to="opacity-0 scale-95">
-                        <DialogPanel class="w-full max-w-2xl transform overflow-hidden p-6 text-center align-middle transition-all overflow-visible">
-                            <!-- Spinner -->
-                            <div class="relative w-full h-16 block mb-6">
-                                <div class="pepper-spinner w-16 h-16"></div>
-                                <div class="w-16 h-full mt-1 absolute top-0 flex items-center justify-center" style="left: calc(50% - 2rem)">
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5 -mt-1 text-slate-800">
-                                        <path fill-rule="evenodd" d="M12 1.5a5.25 5.25 0 00-5.25 5.25v3a3 3 0 00-3 3v6.75a3 3 0 003 3h10.5a3 3 0 003-3v-6.75a3 3 0 00-3-3v-3c0-2.9-2.35-5.25-5.25-5.25zm3.75 8.25v-3a3.75 3.75 0 10-7.5 0v3h7.5z" clip-rule="evenodd" />
-                                    </svg>
-                                </div>
-                            </div>
-                            <h3 class="inline-flex text-lg font-bold leading-6 text-slate-700">
-                                Processando sua compra
-                            </h3>
-                            <span class="loading text-base lg:text-lg font-bold leading-6 text-slate-700 w-8 inline-block text-left"></span>
-                        </DialogPanel>
-                    </TransitionChild>
-                </div>
-            </div>
-        </Dialog>
-    </TransitionRoot>
-
 </template>
 
 <style>
@@ -1058,5 +938,27 @@ html,
     padding-bottom: 0;
     overflow: hidden;
     border-width: 0;
+}
+
+/* Form styles */
+.pepper-input.icon-user,
+.pepper-input.icon-phone,
+.pepper-input.icon-email {
+    background-repeat: no-repeat;
+    background-position: 8px center;
+    background-size: 16px;
+    padding-left: 2rem;
+}
+
+.pepper-input.icon-user {
+    background-image: url('data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="slategray" width="16" height="16"%3E%3Cpath stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"/%3E%3C/svg%3E');
+}
+
+.pepper-input.icon-email {
+    background-image: url('data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="slategray" width="16" height="16"%3E%3Cpath stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75"/%3E%3C/svg%3E')
+}
+
+.pepper-input.icon-phone {
+    background-image: url('data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="slategray" width="14" height="14"%3E%3Cpath stroke-linecap="round" stroke-linejoin="round" d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 002.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 01-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 00-1.091-.852H4.5A2.25 2.25 0 002.25 4.5v2.25z"/%3E%3C/svg%3E')
 }
 </style>
