@@ -1,7 +1,11 @@
 <script type="text/javascript">
+
+import svg from '@/assets/img/payment-labels.svg';
+
 export default {
     data() {
         return {
+            SvgPaymentLabels: svg,
             iconPix: `
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
                     <g fill="#32bcad" fill-rule="evenodd">
@@ -16,16 +20,16 @@ export default {
   
 <template>
     <div class="flex flex-row items-center">
-        <img class="mr-1 h-[24px] w-[36px]" alt="visa" src="https://img6.wsimg.com/fos/react/icons/115/gd/sprite.svg#visa" />
-        <img class="mr-1 h-[24px] w-[36px]" alt="mastercard" src="https://img6.wsimg.com/fos/react/icons/115/gd/sprite.svg#mastercard" />
-        <img class="mr-1 h-[24px] w-[36px]" alt="elo" src="https://img6.wsimg.com/fos/react/icons/115/gd/sprite.svg#elo" />
-        <img class="mr-1 h-[24px] w-[36px]" alt="hipercard" src="https://img6.wsimg.com/fos/react/icons/115/gd/sprite.svg#hipercard" />
-        <img class="mr-1 h-[24px] w-[36px]" alt="amex" src="https://img6.wsimg.com/fos/react/icons/115/gd/sprite.svg#amex" />
-        <img class="mr-1 h-[24px] w-[36px]" alt="discover" src="https://img6.wsimg.com/fos/react/icons/115/gd/sprite.svg#discover" />
-        <img class="mr-1 h-[24px] w-[36px]" alt="jcb" src="https://img6.wsimg.com/fos/react/icons/115/gd/sprite.svg#jcb" />
+        <img class="mr-1 h-[24px] w-[36px]" alt="visa" :src="SvgPaymentLabels + '#visa'" />
+        <img class="mr-1 h-[24px] w-[36px]" alt="mastercard" :src="SvgPaymentLabels + '#mastercard'" />
+        <img class="mr-1 h-[24px] w-[36px]" alt="elo" :src="SvgPaymentLabels + '#elo'" />
+        <img class="mr-1 h-[24px] w-[36px]" alt="hipercard" :src="SvgPaymentLabels + '#hipercard'" />
+        <img class="mr-1 h-[24px] w-[36px]" alt="amex" :src="SvgPaymentLabels + '#amex'" />
+        <img class="mr-1 h-[24px] w-[36px]" alt="discover" :src="SvgPaymentLabels + '#discover'" />
+        <img class="mr-1 h-[24px] w-[36px]" alt="jcb" :src="SvgPaymentLabels + '#jcb'" />
         <div class="mr-1 h-[24px] w-[36px] aspect-video flex items-center justify-center bg-white rounded-[2px] border-2 border-[#d4dbe0]" alt="pix">
             <span v-html="iconPix" class='w-4 h-4'></span>
         </div>
-        <img class="mr-1 h-[24px] w-[36px]" alt="boleto" src="https://img6.wsimg.com/fos/react/icons/115/gd/sprite.svg#boleto" />
+        <img class="mr-1 h-[24px] w-[36px]" alt="boleto" :src="SvgPaymentLabels + '#boleto'" />
     </div>
 </template>
