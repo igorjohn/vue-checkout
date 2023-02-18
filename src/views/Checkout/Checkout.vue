@@ -92,6 +92,8 @@ import BannerImg from '@/assets/img/mock/checkout-banner.png';
 import OrderBump01 from '@/assets/img/mock/orderbump-01.jpeg';
 import OrderBump02 from '@/assets/img/mock/orderbump-02.jpeg';
 
+import SvgPaymentLabels from '@/assets/img/payment-labels.svg';
+
 import Badges from "@/components/Badges.vue";
 import CountdownTimer from "@/components/CountdownTimer.vue";
 import FooterDisclaimer from "@/components/FooterDisclaimer.vue";
@@ -101,6 +103,7 @@ import OrderBump from "@/components/OrderBump.vue";
 import SelectCountryFlags from "@/components/SelectCountryFlags.vue";
 import CreditCardSavedData from "@/components/SavedCreditCard.vue";
 import CheckoutStep from "@/components/CheckoutStep.vue";
+import FormLabel from "@/components/FormLabel.vue";
 
 export default {
     data() {
@@ -294,6 +297,12 @@ export default {
             cardExpirationMonth: null,
             cardExpirationYear: null,
 
+            // Validação - Card Number
+            cardNumberIsValid: null,
+            cardNumberErrorMessage: '',
+            cardNumber: null,
+            cardFlag: undefined,
+
         }
     },
     methods: {
@@ -434,6 +443,72 @@ export default {
             if (year && month && year == currentYear && month > currentMonth) this.cardExpirationDateIsValid = true;
         },
 
+        ValidateCardNumber(val) {
+            this.cardNumberIsValid = false;
+            this.cardFlag = undefined;
+
+            let numbers = val.replace(/ /g, '');
+
+            // Card flags Regex:
+            const cardFlagsRegex = [
+                {
+                    flag: 'elo',
+                    regex: /^(4(0117[89]|3(1274|8935)|5(1416|7(393|63[12])))|50(4175|6(699|7([0-6]\d|7[0-8]))|9\d{3})|6(27780|36(297|368)|5(0(0(3[1-35-9]|4\d|5[01])|4(0[5-9]|([1-3]\d|8[5-9]|9\d))|5([0-2]\d|3[0-8]|4[1-9]|[5-8]\d|9[0-8])|7(0\d|1[0-8]|2[0-7])|9(0[1-9]|[1-6]\d|7[0-8]))|16(5[2-9]|[67]\d)|50([01]\d|2[1-9]|[34]\d|5[0-8]))))/
+                },
+                {
+                    flag: 'visa',
+                    regex: /^4\d{5}/
+                },
+                {
+                    flag: 'mastercard',
+                    regex: /^(5[1-5]\d{4}|2(2(2[1-9]\d{2}|[3-9]\d{3})|[3-6]\d{4}|7([01]\d{3}|20\d{2})))/
+                },
+                {
+                    flag: 'amex',
+                    regex: /^3[47]\d{4}/
+                },
+                {
+                    flag: 'hipercard',
+                    regex: /^(?:3841[046]0|6(?:06282|37(?:095|5(?:68|99)|6(?:09|12))))/
+                }
+            ]
+
+            for (let i = 0; i < cardFlagsRegex.length; i++) {
+                if (cardFlagsRegex[i].regex.test(numbers)) this.cardFlag = cardFlagsRegex[i].flag;
+            }
+
+            // Validação card Number:
+            if (numbers.length < 16) {
+                this.cardNumberIsValid = false;
+                this.cardNumberErrorMessage = 'Informe um número de cartão válido.'
+                if (numbers.length == 0) this.cardNumberErrorMessage = 'Este campo é obrigatório.'
+            }
+
+            if (numbers.length >= 16) {
+
+                // Luhn's algorythm:
+                let multiplier = "2121212121212121";  // One more character added...
+                let multipliedNumber;
+                let sum = 0 // Initialise it as a number.
+
+                for (let i = 0; i < numbers.length; i++) {
+                    multipliedNumber = numbers[i] * multiplier[i];
+                    if (multipliedNumber > 9) multipliedNumber = multipliedNumber % 10 + Math.floor(multipliedNumber / 10);
+
+                    sum += multipliedNumber;
+                }
+                let check = sum % 10; // Simpler now because all digits were processed
+                if (check == 0) { // Sum is multiple of 10
+                    console.log(`${val} is a valid Credit Card number.`);
+                    this.cardNumberIsValid = true;
+                } else {
+                    this.cardNumberIsValid = false;
+                    this.cardNumberErrorMessage = 'Informe um número de cartão válido.'
+                    console.log(`${val} is not a valid Credit Card number.`);
+                }
+            }
+
+        },
 
         checkSavedCards(event) {
             event ? this.hasSavedCards = true : this.hasSavedCards = false;
@@ -481,7 +556,7 @@ export default {
                 <CheckoutStep :hasNumber="true" :StepNumber="1" title="Suas informações" />
 
                 <div class="lg:col-span-2">
-                    <label :class="Classes.label"> Nome completo: </label>
+                    <FormLabel name="Nome completo:" />
                     <input
                         @input="ValidateName(name)"
                         v-model="name"
@@ -496,7 +571,7 @@ export default {
                 </div>
 
                 <div class="lg:col-span-2 relative">
-                    <label :class="Classes.label"> Digite seu e-mail: </label>
+                    <FormLabel name="Digite seu e-mail:" />
                     <input
                         :class="[{ 'input-has-error': EmailIsValid == false }, Classes.input, 'pepper-input icon-email']"
                         v-model="email"
@@ -525,7 +600,7 @@ export default {
                 </div>
 
                 <div class="lg:col-span-1">
-                    <label :class="Classes.label"> Celular: </label>
+                    <FormLabel name="Celular:" />
                     <div class="flex flex-row">
                         <SelectCountryFlags />
                         <input
@@ -543,7 +618,7 @@ export default {
                 </div>
 
                 <div class="lg:col-span-1">
-                    <label :class="Classes.label"> CPF: </label>
+                    <FormLabel name="CPF:" />
                     <input
                         :class="[{ 'input-has-error': CpfIsValid == false }, Classes.input]"
                         v-model="doc"
@@ -557,24 +632,24 @@ export default {
                 </div>
 
                 <!--  <div class="lg:col-span-2 pt-4">
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                <div class="w-full rounded bg-gray-50 border border-gray-150 hover:border-indigo-300 transition duration-700">
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    <div @click="isOpenDiscountCoupon = !isOpenDiscountCoupon" class="flex gap-2 px-3 py-3.5 items-center justify-between cursor-pointer">
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        <div class="inline-flex gap-2 items-center justify-start">
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            <div v-html="icons.ticket" class="w-4 h-4 text-slate-500 rotate-[325deg]"></div>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            <span class="text-sm text-indigo-500 font-medium">Tem um cupom de desconto?</span>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        </div>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        <div class="inline-flex items-center justify-center ml-auto mr-1 transition duration-500">
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            <span v-html="icons.chevronDown" :class="[isOpenDiscountCoupon ? 'rotate-180' : 'rotate-0', 'w-4 h-4']"></span>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        </div>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    </div>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    <div v-if="isOpenDiscountCoupon" class="flex items-center justify-start gap-1 transition duration-500 w-full px-4 pb-4">
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        <input :class="Classes.discount.input" type="text" required inputmode="text" placeholder="Digite o código do cupom" />
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        <button :class="Classes.discount.button">
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            Aplicar
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        </button>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    </div>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                </div>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            </div> -->
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    <div class="w-full rounded bg-gray-50 border border-gray-150 hover:border-indigo-300 transition duration-700">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        <div @click="isOpenDiscountCoupon = !isOpenDiscountCoupon" class="flex gap-2 px-3 py-3.5 items-center justify-between cursor-pointer">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            <div class="inline-flex gap-2 items-center justify-start">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                <div v-html="icons.ticket" class="w-4 h-4 text-slate-500 rotate-[325deg]"></div>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                <span class="text-sm text-indigo-500 font-medium">Tem um cupom de desconto?</span>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            </div>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            <div class="inline-flex items-center justify-center ml-auto mr-1 transition duration-500">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                <span v-html="icons.chevronDown" :class="[isOpenDiscountCoupon ? 'rotate-180' : 'rotate-0', 'w-4 h-4']"></span>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            </div>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        </div>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        <div v-if="isOpenDiscountCoupon" class="flex items-center justify-start gap-1 transition duration-500 w-full px-4 pb-4">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            <input :class="Classes.discount.input" type="text" required inputmode="text" placeholder="Digite o código do cupom" />
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            <button :class="Classes.discount.button">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                Aplicar
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            </button>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        </div>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    </div>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                </div> -->
 
                 <CheckoutStep :hasNumber="true" :StepNumber="2" title="Dados de pagamento" class="mt-4" />
 
@@ -598,7 +673,7 @@ export default {
                         @click="paymentBillet"
                         :class="[Classes.tabs.default, tab == 3 ? Classes.tabs.selected : Classes.tabs.notSelected, 'flex flex-col lg:flex-row items-center justify-center tracking-tight']">
                         <div class="inline-flex items-center justify-center lg:justify-start h-6 w-auto">
-                            <img class="w-7" src="https://img6.wsimg.com/fos/react/icons/115/gd/sprite.svg#boleto" />
+                            <img class="w-7" :src="SvgPaymentLabels + '#boleto'" />
                         </div>
                         Boleto
                     </button>
@@ -607,12 +682,28 @@ export default {
                 <!-- Credit card Tab -->
                 <div class="lg:col-span-2 grid grid-cols-3 gap-3 gap-x-2 my-2" v-if="hasSavedCards && tab === 1">
                     <div class="col-span-3">
-                        <label :class="Classes.label"> Número do cartão: </label>
-                        <input :class="Classes.input" required inputmode="tel" type="text" v-maska data-maska="#### #### #### ####" />
+                        <FormLabel name="Número do cartão:" />
+                        <div class="relative">
+                            <input
+                                @input="ValidateCardNumber(cardNumber)"
+                                v-model="cardNumber"
+                                autocomplete="cardNumber"
+                                v-maska
+                                data-maska="#### #### #### ####"
+                                :class="[{ 'input-has-error': cardNumberIsValid == false }, Classes.input]"
+                                required
+                                inputmode="tel"
+                                type="text" />
+
+                            <div v-if="cardFlag && cardFlag !== undefined" class="absolute top-0 right-0 w-auto p-2 z-10 flex items-center">
+                                <img class="h-[24px] w-[36px]" :src="SvgPaymentLabels + cardFlag" />
+                            </div>
+                        </div>
+                        <div v-if="cardNumberIsValid == false" class="checkout-invalid-feedback"> {{ cardNumberErrorMessage }} </div>
                     </div>
 
                     <div class="col-span-3">
-                        <label :class="Classes.label"> Nome impresso no cartão: </label>
+                        <FormLabel name="Nome impresso no cartão:" />
                         <input
                             @input="ValidateCardHolder(cardHolder)"
                             v-model="cardHolder"
@@ -627,7 +718,7 @@ export default {
                     </div>
 
                     <div class="col-span-1">
-                        <label :class="Classes.label"> Mês: </label>
+                        <FormLabel name="Mês:" />
                         <select
                             required
                             :class="[Classes.input, { 'text-gray-400': !expirationMonth, 'border-red-500 focus:border-red-500': expirationMonth !== null && expirationYear !== null && cardExpirationDateIsValid == false }]"
@@ -644,7 +735,7 @@ export default {
                     </div>
 
                     <div class="col-span-1">
-                        <label :class="Classes.label"> Ano: </label>
+                        <FormLabel name="Ano:" />
                         <select
                             required
                             :class="[Classes.input, { 'text-gray-400': !expirationYear, 'border-red-500 focus:border-red-500': expirationMonth !== null && expirationYear !== null && cardExpirationDateIsValid == false }]"
@@ -658,7 +749,7 @@ export default {
                     </div>
 
                     <div class="col-span-1">
-                        <label :class="Classes.label"> CVV: </label>
+                        <FormLabel name="CVV:" />
                         <div :class="Classes.containerInputIcon">
                             <input :class="[Classes.input, 'pl-8']" required maxlength="4" inputmode="tel" type="text" v-maska data-maska="####" />
                             <div v-html="icons.lock" class="w-4 absolute top-0 left-0 h-[36px] flex items-center justify-center mx-2 text-slate-500 z-10"></div>
@@ -666,7 +757,7 @@ export default {
                     </div>
 
                     <div class="col-span-3">
-                        <label :class="Classes.label"> Parcelamento: </label>
+                        <FormLabel name="Parcelamento:" />
                         <Listbox v-model="selectedInstallment">
                             <div class="relative mt-1">
                                 <ListboxButton
@@ -759,24 +850,13 @@ export default {
                         Você está em um ambiente seguro.
                     </span>
 
-
                     <div class="flex gap-5 lg:gap-6 xl:gap-8 flex-col md:flex-row items-center justify-center mt-6 mb-4">
                         <div class="flex items-center gap-2 text-sm font-semibold text-slate-600 tracking-tight">
                             <div v-html="icons.lock" class="w-4 h-4 text-slate-600 mt[-2px]"></div>
                             Pagamento seguro
                         </div>
                         <div class="flex flex-row items-center">
-                            <img :class="Classes.footerFlagImg" alt="visa" src="https://img6.wsimg.com/fos/react/icons/115/gd/sprite.svg#visa" />
-                            <img :class="Classes.footerFlagImg" alt="mastercard" src="https://img6.wsimg.com/fos/react/icons/115/gd/sprite.svg#mastercard" />
-                            <img :class="Classes.footerFlagImg" alt="elo" src="https://img6.wsimg.com/fos/react/icons/115/gd/sprite.svg#elo" />
-                            <img :class="Classes.footerFlagImg" alt="hipercard" src="https://img6.wsimg.com/fos/react/icons/115/gd/sprite.svg#hipercard" />
-                            <img :class="Classes.footerFlagImg" alt="amex" src="https://img6.wsimg.com/fos/react/icons/115/gd/sprite.svg#amex" />
-                            <img :class="Classes.footerFlagImg" alt="discover" src="https://img6.wsimg.com/fos/react/icons/115/gd/sprite.svg#discover" />
-                            <img :class="Classes.footerFlagImg" alt="jcb" src="https://img6.wsimg.com/fos/react/icons/115/gd/sprite.svg#jcb" />
-                            <div :class="Classes.footerFlagImg" alt="pix" class="aspect-video flex items-center justify-center bg-white rounded-[2px] border-2 border-[#d4dbe0]">
-                                <span v-html="icons.pix" class='w-4 h-4'></span>
-                            </div>
-                            <img :class="Classes.footerFlagImg" alt="boleto" src="https://img6.wsimg.com/fos/react/icons/115/gd/sprite.svg#boleto" />
+                            <FooterPaymentLabels />
                         </div>
                     </div>
                 </div>
@@ -818,7 +898,6 @@ export default {
                 </div>
             </div>
 
-            <!-- Footer disclaimer -->
             <FooterDisclaimer />
 
         </div>
