@@ -1,4 +1,3 @@
-
 <script>
 
 export default {
@@ -15,7 +14,6 @@ export default {
                 text: '#ffffff',
                 svg: '#faa300'
             }
-
         }
     },
     methods: {
@@ -71,7 +69,7 @@ export default {
                 </g>
             </svg>
 
-            <span class="inline text-xs lg:text-sm font-medium max-w-[44vw] leading-5">
+            <span class="inline text-xs lg:text-sm font-medium max-w-[44vw] leading-4 lg:leading-5">
                 {{ countdownMessage }}
             </span>
         </div>
