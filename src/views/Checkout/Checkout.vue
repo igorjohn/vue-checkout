@@ -2,7 +2,7 @@
 
 import { ref } from 'vue'
 import { Listbox, ListboxButton, ListboxOptions, ListboxOption } from '@headlessui/vue'
-import { ChevronDownIcon } from '@heroicons/vue/20/solid'
+import { CheckCircleIcon } from '@heroicons/vue/20/solid'
 
 import { vMaska } from "maska";
 
@@ -92,6 +92,7 @@ import BannerImg from '@/assets/img/mock/checkout-banner.png';
 import OrderBump01 from '@/assets/img/mock/orderbump-01.jpeg';
 import OrderBump02 from '@/assets/img/mock/orderbump-02.jpeg';
 
+import PagamentoSeguroSvg from '@/assets/img/pagamento-seguro.svg';
 import SvgFlags from '@/assets/img/payment-labels.svg';
 
 import Badges from "@/components/Badges.vue";
@@ -244,25 +245,25 @@ export default {
             hasSavedCards: false,
 
             // Validação - Nome
-            NameIsValid: null,
-            NameErrorMessage: '',
+            nameIsValid: null,
+            nameErrorMessage: '',
             name: '',
 
             // Validação - Email
-            EmailIsValid: null,
-            EmailErrorMessage: '',
-            ShowEmailAutoSuggest: false,
-            EmailSuggest: [],
+            emailIsValid: null,
+            emailErrorMessage: '',
+            showEmailAutoSuggest: false,
+            emailSuggest: [],
             email: '',
 
             // Validação - Phone
-            PhoneIsValid: null,
-            PhoneErrorMessage: '',
+            phoneIsValid: null,
+            phoneErrorMessage: '',
             phone: '',
 
             // Validação - CPF
-            CpfIsValid: null,
-            CpfErrorMessage: '',
+            cpfIsValid: null,
+            cpfErrorMessage: '',
             doc: '',
 
             // Validação - Card holder
@@ -283,6 +284,11 @@ export default {
             cardNumber: null,
             cardFlag: undefined,
 
+            // Validação - CVV
+            cvvIsValid: null,
+            cardCVVErrorMessage: '',
+            cvv: null,
+
         }
     },
     methods: {
@@ -293,13 +299,13 @@ export default {
 
         // Validations:
         ValidateName(val) {
-            this.NameIsValid = false;
-            this.NameErrorMessage = 'Digite o seu nome completo.'
+            this.nameIsValid = false;
+            this.nameErrorMessage = 'Digite o seu nome completo.'
 
-            if (val == '' || !val) this.NameErrorMessage = 'Este campo é obrigatório.';
+            if (val == '' || !val) this.nameErrorMessage = 'Este campo é obrigatório.';
 
-            if (val.length > 0 && val.length >= 4) this.NameIsValid = false;
-            if (val.length > 4) this.NameIsValid = true;
+            if (val.length >= 0 && val.length >= 4) this.nameIsValid = false;
+            if (val.length > 4) this.nameIsValid = true;
         },
 
         ValidateEmail(mail) {
@@ -313,10 +319,10 @@ export default {
                 'live.com'
             ]
 
-            if (!mail.includes('@')) this.ShowEmailAutoSuggest = false;
+            if (!mail.includes('@')) this.showEmailAutoSuggest = false;
 
             if (mail.includes('@')) {
-                this.ShowEmailAutoSuggest = true;
+                this.showEmailAutoSuggest = true;
 
                 const getLength = mail.split('@').length;
                 const query = mail.split('@')[getLength - 1];
@@ -324,52 +330,45 @@ export default {
                 const domain = RegExp(`.*${query.toLowerCase().split('').join('.*')}.*`)
                 const matches = EmailDomains.filter(v => v.toLowerCase().match(domain))
 
-                //const matches = EmailDomains.map(e => e.toLowerCase().indexOf(query) > -1);
-
-                console.log(matches)
-                console.log(query)
-                this.EmailSuggest = matches;
+                this.emailSuggest = matches;
             }
 
-            this.EmailIsValid = false;
-            this.EmailErrorMessage = 'Insira um e-mail válido.'
+            this.emailIsValid = false;
+            this.emailErrorMessage = 'Insira um e-mail válido.'
 
             // Regex e-mail:
             if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(mail)) {
-
-                this.EmailIsValid = true;
-                console.log('E-mail validou.');
+                this.emailIsValid = true;
+                this.showEmailAutoSuggest = false;
 
             } else {
-                this.EmailIsValid = false;
-                console.log("E-mail inválido!");
-
-                if (mail == '' || !mail) this.EmailErrorMessage = 'Este campo é obrigatório.'
+                this.emailIsValid = false;
+                if (mail == '' || !mail) this.emailErrorMessage = 'Este campo é obrigatório.'
             }
         },
 
         SelectEmailSuggest(suggested) {
-            this.ShowEmailAutoSuggest = false;
+            this.showEmailAutoSuggest = false;
             this.email = this.email.split('@')[0] + '@' + suggested;
-            this.EmailIsValid = true;
+            this.emailIsValid = true;
         },
 
         ValidatePhone(phone) {
-            this.PhoneIsValid = false;
+            this.phoneIsValid = false;
             let phoneNumbers = phone.replace(/[\s.,-,/(,/)]*/igm, '');
 
             if (phoneNumbers.length >= 10) {
-                this.PhoneIsValid = true;
+                this.phoneIsValid = true;
 
             } else {
-                this.PhoneIsValid = false;
-                this.PhoneErrorMessage = "Digite um telefone válido."
+                this.phoneIsValid = false;
+                this.phoneErrorMessage = "Digite um telefone válido."
             }
         },
 
         ValidateCPF(val) {
-            this.CpfIsValid = false;
-            this.CpfErrorMessage = 'Digite um CPF válido.';
+            this.cpfIsValid = false;
+            this.cpfErrorMessage = 'Digite um CPF válido.';
 
             function isCpfValid() {
                 var Soma = 0;
@@ -399,20 +398,21 @@ export default {
                 return true;
             }
 
-            if (isCpfValid() == false) this.CpfIsValid = false;
-            if (isCpfValid() == true) this.CpfIsValid = true;
+            if (this.doc == '') this.cpfErrorMessage = 'Este campo é obrigatório.'
+
+            if (isCpfValid() == false) this.cpfIsValid = false;
+            if (isCpfValid() == true) this.cpfIsValid = true;
         },
 
         ValidateCardHolder(val) {
             this.cardHolderIsValid = false;
             this.cardHolderErrorMessage = 'Digite o nome do titular do cartão.';
-
             if (val == '' || !val) this.cardHolderErrorMessage = 'Este campo é obrigatório.';
 
-            if (val.length > 8 && val.split(' ').length >= 2) this.cardHolderIsValid = true;
+            if (val.length > 5 && val.split(' ').length >= 2 && val.split(' ')[1] !== '') this.cardHolderIsValid = true;
         },
 
-        ValidateCardExpirationDate(month, year) {
+        validateCardExpirationDate(month, year) {
             this.cardExpirationDateIsValid = false;
             this.cardExpirationDateErrorMessage = 'Data inválida.';
 
@@ -427,65 +427,107 @@ export default {
             this.cardNumberIsValid = false;
             this.cardFlag = undefined;
 
-            let numbers = val.replace(/ /g, '');
+            if (!val || val.length == 0) this.cardNumberErrorMessage = 'Este campo é obrigatório.';
 
-            // Card flags Regex:
-            const cardFlagsRegex = [
-                {
-                    flag: 'elo',
-                    regex: /^(4(0117[89]|3(1274|8935)|5(1416|7(393|63[12])))|50(4175|6(699|7([0-6]\d|7[0-8]))|9\d{3})|6(27780|36(297|368)|5(0(0(3[1-35-9]|4\d|5[01])|4(0[5-9]|([1-3]\d|8[5-9]|9\d))|5([0-2]\d|3[0-8]|4[1-9]|[5-8]\d|9[0-8])|7(0\d|1[0-8]|2[0-7])|9(0[1-9]|[1-6]\d|7[0-8]))|16(5[2-9]|[67]\d)|50([01]\d|2[1-9]|[34]\d|5[0-8]))))/
-                },
-                {
-                    flag: 'visa',
-                    regex: /^4\d{5}/
-                },
-                {
-                    flag: 'mastercard',
-                    regex: /^(5[1-5]\d{4}|2(2(2[1-9]\d{2}|[3-9]\d{3})|[3-6]\d{4}|7([01]\d{3}|20\d{2})))/
-                },
-                {
-                    flag: 'amex',
-                    regex: /^3[47]\d{4}/
-                },
-                {
-                    flag: 'hipercard',
-                    regex: /^(?:3841[046]0|6(?:06282|37(?:095|5(?:68|99)|6(?:09|12))))/
+            if (val) {
+                let numbers = val.replace(/ /g, '');
+
+                // Card flags Regex:
+                const cardFlagsRegex = [
+                    { flag: 'elo', regex: /^(4(0117[89]|3(1274|8935)|5(1416|7(393|63[12])))|50(4175|6(699|7([0-6]\d|7[0-8]))|9\d{3})|6(27780|36(297|368)|5(0(0(3[1-35-9]|4\d|5[01])|4(0[5-9]|([1-3]\d|8[5-9]|9\d))|5([0-2]\d|3[0-8]|4[1-9]|[5-8]\d|9[0-8])|7(0\d|1[0-8]|2[0-7])|9(0[1-9]|[1-6]\d|7[0-8]))|16(5[2-9]|[67]\d)|50([01]\d|2[1-9]|[34]\d|5[0-8]))))/ },
+                    { flag: 'visa', regex: /^4\d{5}/ },
+                    { flag: 'mastercard', regex: /^(5[1-5]\d{4}|2(2(2[1-9]\d{2}|[3-9]\d{3})|[3-6]\d{4}|7([01]\d{3}|20\d{2})))/ },
+                    { flag: 'amex', regex: /^3[47]\d{4}/ },
+                    { flag: 'hipercard', regex: /^(?:3841[046]0|6(?:06282|37(?:095|5(?:68|99)|6(?:09|12))))/ }
+                ]
+
+                for (let i = 0; i < cardFlagsRegex.length; i++) {
+                    if (cardFlagsRegex[i].regex.test(numbers)) this.cardFlag = cardFlagsRegex[i].flag;
                 }
-            ]
 
-            for (let i = 0; i < cardFlagsRegex.length; i++) {
-                if (cardFlagsRegex[i].regex.test(numbers)) this.cardFlag = cardFlagsRegex[i].flag;
-            }
-
-            // Validação card Number:
-            if (numbers.length < 16) {
-                this.cardNumberIsValid = false;
-                this.cardNumberErrorMessage = 'Informe um número de cartão válido.'
-                if (numbers.length == 0) this.cardNumberErrorMessage = 'Este campo é obrigatório.'
-            }
-
-            if (numbers.length >= 16) {
-
-                // Luhn's algorythm:
-                let multiplier = "2121212121212121";  // One more character added...
-                let multipliedNumber;
-                let sum = 0 // Initialise it as a number.
-
-                for (let i = 0; i < numbers.length; i++) {
-                    multipliedNumber = numbers[i] * multiplier[i];
-                    if (multipliedNumber > 9) multipliedNumber = multipliedNumber % 10 + Math.floor(multipliedNumber / 10);
-
-                    sum += multipliedNumber;
-                }
-                let check = sum % 10; // Simpler now because all digits were processed
-                if (check == 0) { // Sum is multiple of 10
-                    console.log(`${val} is a valid Credit Card number.`);
-                    this.cardNumberIsValid = true;
-                } else {
+                // Validação card Number:
+                if (numbers.length < 16) {
                     this.cardNumberIsValid = false;
-                    this.cardNumberErrorMessage = 'Informe um número de cartão válido.'
-                    console.log(`${val} is not a valid Credit Card number.`);
+                    this.cardNumberErrorMessage = 'Informe um número de cartão válido.';
                 }
+
+                if (numbers.length >= 16) {
+
+                    // Luhn's algorythm:
+                    let multiplier = "2121212121212121";  // One more character added...
+                    let multipliedNumber;
+                    let sum = 0 // Initialise it as a number.
+
+                    for (let i = 0; i < numbers.length; i++) {
+                        multipliedNumber = numbers[i] * multiplier[i];
+                        if (multipliedNumber > 9) multipliedNumber = multipliedNumber % 10 + Math.floor(multipliedNumber / 10);
+
+                        sum += multipliedNumber;
+                    }
+                    let check = sum % 10; // Simpler now because all digits were processed
+                    if (check == 0) { // Sum is multiple of 10
+                        console.log(`${val} is a valid Credit Card number.`);
+                        this.cardNumberIsValid = true;
+                    } else {
+                        this.cardNumberIsValid = false;
+                        this.cardNumberErrorMessage = 'Informe um número de cartão válido.'
+                        console.log(`${val} is not a valid Credit Card number.`);
+                    }
+                }
+            }
+
+        },
+
+        validateCVV(cvv) {
+            this.cvvIsValid = false;
+            this.cardCVVErrorMessage = 'Campo obrigatório.';
+
+            if (cvv && cvv.length >= 3) this.cvvIsValid = true;
+        },
+
+        submitPayment(e) {
+            console.log('dados inválidos');
+            e.preventDefault();
+
+            // Se a Tab 'Cartão' estiver selecionada:
+            if (this.tab == 1) {
+                if (!this.cvv || this.cvv == '' || this.cvvIsValid == false) {
+                    this.validateCVV(this.cvv);
+                    this.$refs.cvv.focus();
+                }
+                if (!this.expirationYear || this.expirationYear == '' || !this.expirationMonth || this.expirationMonth == '' || this.cardExpirationDateIsValid == false) {
+                    this.validateCardExpirationDate(this.expirationMonth, this.expirationYear)
+                    this.$refs.expirationMonth.focus();
+                }
+                if (!this.cardHolder || this.cardHolder == '' || this.cardHolderIsValid == false) {
+                    this.ValidateCardHolder(this.cardHolder);
+                    this.$refs.cardHolder.focus();
+                }
+                if (!this.cardNumber || this.cardNumber == '' || this.cardNumberIsValid == false) {
+                    this.ValidateCardNumber(this.cardNumber);
+                    this.$refs.cardNumber.focus();
+                }
+            }
+
+            if (!this.doc || this.doc == '' || this.cpfIsValid == false) {
+                this.ValidateCPF(this.doc);
+                this.$refs.doc.focus();
+            }
+            if (!this.phone || this.phone == '' || this.phoneIsValid == false) {
+                this.ValidatePhone(this.phone);
+                this.$refs.phone.focus();
+            }
+            if (!this.email || this.email == '' || this.emailIsValid == false) {
+                this.ValidateEmail(this.email);
+                this.$refs.email.focus();
+            }
+            if (!this.name || this.name == '' || this.nameIsValid == false) {
+                this.ValidateName(this.name);
+                this.$refs.name.focus();
+            }
+
+            if (this.nameIsValid == true && this.emailIsValid == true && this.phoneIsValid == true && this.cpfIsValid == true) {
+                console.log('dados válidos')
             }
 
         },
@@ -500,18 +542,21 @@ export default {
 }
 </script>
 
-<template><!-- <div class="w-full flex gap-2 lg:gap-3 items-center justify-center bg-slate-800 px-4 py-2.5">
-        <div class="rounded-full w-4 h-4 lg:w-5 lg:h-5 aspect-square bg-green-600 text-white flex items-center justify-center">
-            <div v-html="icons.lock" class="w-2.5 h-2.5 lg:w-3 lg:h-3"></div>
-        </div>
-</span>-->
+<template>
+    <!-- <div class="w-full flex gap-2 lg:gap-3 items-center justify-center bg-slate-800 px-4 py-2.5">
+                                                                                                                                                                                                                                                                                                                                                                                                                                    <div class="rounded-full w-4 h-4 lg:w-5 lg:h-5 aspect-square bg-green-600 text-white flex items-center justify-center">
+                                                                                                                                                                                                                                                                                                                                                                                                                                        <div v-html="icons.lock" class="w-2.5 h-2.5 lg:w-3 lg:h-3"></div>
+                                                                                                                                                                                                                                                                                                                                                                                                                                    </div>
+                                                                                                                                                                                                                                                                                                                                                                                                                            </span>-->
     <CountdownTimer />
 
     <div id="checkout-container" class="w-full flex flex-col xl:flex-row xl:justify-center">
         <!-- Checkout Left Column -->
         <div :class="[checkoutHas2Columns ? 'xl:mx-0 xl:w-2/3 xl:px-6' : '', Classes.checkoutLeftColumn]">
+
             <!-- Checkout Banner -->
             <img :src="BannerImg" class="w-full rounded-lg" />
+
             <!-- Payment form container -->
             <div :class="Classes.containerPayment">
 
@@ -526,8 +571,12 @@ export default {
                             <span class="block text-sm font-semibold text-slate-600 tracking-tight">
                                 Curso de gastronomia atualizado para 2023 – As melhores receitas
                             </span>
-                            <span class="flex items-center gap-1 mt-1 text-sm font-medium text-slate-500"> 12x <span class="text-xl font-bold text-slate-700 tracking-tighter">R$ 22,70</span></span>
-                            <span class="flex mt-1 text-xs font-medium text-slate-500">ou R$ 197,00 à vista</span>
+                            <span class="flex items-center gap-1 mt-1 text-sm font-medium text-slate-500">
+                                12x <span class="text-xl font-bold text-slate-700 tracking-tighter">R$ 22,70</span>
+                            </span>
+                            <span class="flex mt-1 text-xs font-medium text-slate-500">
+                                ou R$ 197,00 à vista
+                            </span>
                         </div>
                     </div>
                 </div>
@@ -539,43 +588,45 @@ export default {
                     <input
                         @input="ValidateName(name)"
                         v-model="name"
+                        ref="name"
                         autocomplete="name"
                         v-maska:[maskName]
                         data-maska="Aa a a a a"
-                        :class="[{ 'input-has-error': NameIsValid == false }, Classes.input, 'pepper-input icon-user']"
+                        :class="[{ 'input-has-error': nameIsValid == false }, Classes.input, 'pepper-input icon-user']"
                         required
                         inputmode="text"
                         type="text" />
-                    <div v-if="NameIsValid == false" class="checkout-invalid-feedback"> {{ NameErrorMessage }} </div>
+                    <div v-if="nameIsValid == false" class="checkout-invalid-feedback"> {{ nameErrorMessage }} </div>
                 </div>
 
                 <div class="lg:col-span-2 relative">
                     <FormLabel name="Digite seu e-mail:" />
                     <input
-                        :class="[{ 'input-has-error': EmailIsValid == false }, Classes.input, 'pepper-input icon-email']"
+                        :class="[{ 'input-has-error': emailIsValid == false }, Classes.input, 'pepper-input icon-email']"
                         v-model="email"
                         autocomplete="email"
+                        ref="email"
                         @keyup="ValidateEmail(email)"
                         v-maska:[maskEmail]
                         data-maska="aab"
                         required
                         inputmode="email"
-                        @keyup.enter="SelectEmailSuggest(EmailSuggest[0])"
+                        @keyup.enter="SelectEmailSuggest(emailSuggest[0])"
                         type="email" />
 
                     <!-- Email autosuggest -->
                     <transition appear>
-                        <div v-if="ShowEmailAutoSuggest && EmailSuggest.length > 0" class="w-full rounded-md bg-gray-50 border border-slate-400 shadow-lg absolute overflow-hidden top-100 z-40 mt-1">
-                            <template v-for="sug in EmailSuggest">
+                        <div v-if="showEmailAutoSuggest && emailSuggest.length > 0" class="w-full rounded-md bg-gray-50 border border-slate-400 shadow-lg absolute overflow-hidden top-100 z-40 mt-1">
+                            <template v-for="sug in emailSuggest">
                                 <li @click.stop.prevent="SelectEmailSuggest(sug)"
-                                    :class="sug == EmailSuggest[0] ? 'font-semibold bg-indigo-50 text-slate-700' : 'font-medium text-gray-600 hover:bg-indigo-100 hover:text-slate-700'"
+                                    :class="sug == emailSuggest[0] ? 'font-semibold bg-indigo-50 text-slate-700' : 'font-medium text-gray-600 hover:bg-indigo-100 hover:text-slate-700'"
                                     class="pr-3 pl-8 py-2.5 text-sm list-none cursor-pointer transition duration-600">
                                     {{ email.split('@')[0] + '@' + sug }}
                                 </li>
                             </template>
                         </div>
                     </transition>
-                    <div v-if="EmailIsValid == false" class="checkout-invalid-feedback"> {{ EmailErrorMessage }} </div>
+                    <div v-if="emailIsValid == false" class="checkout-invalid-feedback"> {{ emailErrorMessage }} </div>
                 </div>
 
                 <div class="lg:col-span-1">
@@ -583,9 +634,10 @@ export default {
                     <div class="flex flex-row">
                         <SelectCountryFlags />
                         <input
-                            :class="[{ 'input-has-error': PhoneIsValid == false }, Classes.input, 'pepper-input icon-phone rounded-l-none rounded-r-md']"
+                            :class="[{ 'input-has-error': phoneIsValid == false }, Classes.input, 'pepper-input icon-phone rounded-l-none rounded-r-md']"
                             v-model="phone"
                             autocomplete="phone"
+                            ref="phone"
                             @input="ValidatePhone(phone)"
                             v-maska:[maskPhone]
                             data-maska="['(NN) N### ####', '(NN) N#### ####']"
@@ -593,49 +645,50 @@ export default {
                             inputmode="tel"
                             type="text" />
                     </div>
-                    <div v-if="PhoneIsValid == false" class="checkout-invalid-feedback"> {{ PhoneErrorMessage }} </div>
+                    <div v-if="phoneIsValid == false" class="checkout-invalid-feedback"> {{ phoneErrorMessage }} </div>
                 </div>
 
                 <div class="lg:col-span-1">
                     <FormLabel name="CPF:" />
                     <input
-                        :class="[{ 'input-has-error': CpfIsValid == false }, Classes.input]"
+                        :class="[{ 'input-has-error': cpfIsValid == false }, Classes.input]"
                         v-model="doc"
+                        ref="doc"
                         @input="ValidateCPF(doc)"
                         v-maska
                         data-maska="###.###.###-##"
                         required
                         inputmode="tel"
                         type="text" />
-                    <div v-if="CpfIsValid == false" class="checkout-invalid-feedback"> {{ CpfErrorMessage }} </div>
+                    <div v-if="cpfIsValid == false" class="checkout-invalid-feedback"> {{ cpfErrorMessage }} </div>
                 </div>
 
                 <!--  <div class="lg:col-span-2 pt-4">
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            <div class="w-full rounded bg-gray-50 border border-gray-150 hover:border-indigo-300 transition duration-700">
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                <div @click="isOpenDiscountCoupon = !isOpenDiscountCoupon" class="flex gap-2 px-3 py-3.5 items-center justify-between cursor-pointer">
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    <div class="inline-flex gap-2 items-center justify-start">
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        <div v-html="icons.ticket" class="w-4 h-4 text-slate-500 rotate-[325deg]"></div>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        <span class="text-sm text-indigo-500 font-medium">Tem um cupom de desconto?</span>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    </div>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    <div class="inline-flex items-center justify-center ml-auto mr-1 transition duration-500">
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        <span v-html="icons.chevronDown" :class="[isOpenDiscountCoupon ? 'rotate-180' : 'rotate-0', 'w-4 h-4']"></span>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    </div>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                </div>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                <div v-if="isOpenDiscountCoupon" class="flex items-center justify-start gap-1 transition duration-500 w-full px-4 pb-4">
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    <input :class="Classes.discount.input" type="text" required inputmode="text" placeholder="Digite o código do cupom" />
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    <button :class="Classes.discount.button">
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        Aplicar
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    </button>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                </div>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            </div>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        </div> -->
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        <div class="w-full rounded bg-gray-50 border border-gray-150 hover:border-indigo-300 transition duration-700">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            <div @click="isOpenDiscountCoupon = !isOpenDiscountCoupon" class="flex gap-2 px-3 py-3.5 items-center justify-between cursor-pointer">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                <div class="inline-flex gap-2 items-center justify-start">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    <div v-html="icons.ticket" class="w-4 h-4 text-slate-500 rotate-[325deg]"></div>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    <span class="text-sm text-indigo-500 font-medium">Tem um cupom de desconto?</span>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                </div>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                <div class="inline-flex items-center justify-center ml-auto mr-1 transition duration-500">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    <span v-html="icons.chevronDown" :class="[isOpenDiscountCoupon ? 'rotate-180' : 'rotate-0', 'w-4 h-4']"></span>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                </div>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            </div>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            <div v-if="isOpenDiscountCoupon" class="flex items-center justify-start gap-1 transition duration-500 w-full px-4 pb-4">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                <input :class="Classes.discount.input" type="text" required inputmode="text" placeholder="Digite o código do cupom" />
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                <button :class="Classes.discount.button">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    Aplicar
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                </button>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            </div>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        </div>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    </div> -->
 
                 <CheckoutStep :hasNumber="true" :StepNumber="2" title="Dados de pagamento" class="mt-4" />
 
                 <!-- Saved Credit card -->
                 <CreditCardSavedData @hasSavedCardData="checkSavedCards" />
 
-                <div class="flex justify-start gap-x-2 lg:col-span-2" v-if="!hasSavedCards">
+                <div class="flex justify-start gap-x-2 lg:col-span-2" v-if="hasSavedCards == false">
                     <button
                         @click="paymentCreditCard"
                         :class="[Classes.tabs.default, tab == 1 ? Classes.tabs.selected : Classes.tabs.notSelected, 'flex flex-col lg:flex-row items-center justify-center tracking-tight']">
@@ -659,7 +712,7 @@ export default {
                 </div>
 
                 <!-- Credit card Tab -->
-                <div class="lg:col-span-2 grid grid-cols-3 gap-3 gap-x-2 my-2" v-if="hasSavedCards && tab === 1">
+                <div class="lg:col-span-2 grid grid-cols-3 gap-3 gap-x-2 my-2" v-if="hasSavedCards == false && tab === 1">
                     <div class="col-span-3">
                         <FormLabel name="Número do cartão:" />
                         <div class="relative">
@@ -667,6 +720,7 @@ export default {
                                 @input="ValidateCardNumber(cardNumber)"
                                 v-model="cardNumber"
                                 autocomplete="cardNumber"
+                                ref="cardNumber"
                                 v-maska
                                 data-maska="#### #### #### ####"
                                 :class="[{ 'input-has-error': cardNumberIsValid == false }, Classes.input]"
@@ -687,6 +741,7 @@ export default {
                             @input="ValidateCardHolder(cardHolder)"
                             v-model="cardHolder"
                             autocomplete="cardHolder"
+                            ref="cardHolder"
                             v-maska:[maskCardHolder]
                             data-maska="A A A A"
                             :class="[{ 'input-has-error': cardHolderIsValid == false }, Classes.input]"
@@ -702,7 +757,8 @@ export default {
                             required
                             :class="[Classes.input, { 'text-gray-400': !expirationMonth, 'border-red-500 focus:border-red-500': expirationMonth !== null && expirationYear !== null && cardExpirationDateIsValid == false }]"
                             v-model="expirationMonth"
-                            @change="ValidateCardExpirationDate(expirationMonth, expirationYear)">
+                            ref="expirationMonth"
+                            @change="validateCardExpirationDate(expirationMonth, expirationYear)">
                             <option :value="null" disabled>Mês</option>
                             <template v-for="m in CreditCard.expMonth">
                                 <option :value="(m.month).toString().padStart(2, '0')">{{ (m.month).toString().padStart(2, '0') }}</option>
@@ -719,7 +775,8 @@ export default {
                             required
                             :class="[Classes.input, { 'text-gray-400': !expirationYear, 'border-red-500 focus:border-red-500': expirationMonth !== null && expirationYear !== null && cardExpirationDateIsValid == false }]"
                             v-model="expirationYear"
-                            @change="ValidateCardExpirationDate(expirationMonth, expirationYear)">
+                            ref="expirationYear"
+                            @change="validateCardExpirationDate(expirationMonth, expirationYear)">
                             <option :value="null" disabled>Ano</option>
                             <template v-for="y in CreditCard.expYear">
                                 <option :value="y.year">{{ y.year }}</option>
@@ -729,7 +786,19 @@ export default {
 
                     <div class="col-span-1">
                         <FormLabel name="CVV:" />
-                        <input :class="Classes.input" required maxlength="4" inputmode="tel" type="text" v-maska data-maska="####" />
+                        <input
+                            :class="[{ 'border-red-500 focus:border-red-500': cvvIsValid == false }, Classes.input]"
+                            required
+                            @input="validateCVV(cvv)"
+                            v-model="cvv"
+                            autocomplete="cvv"
+                            ref="cvv"
+                            maxlength="4"
+                            inputmode="tel"
+                            type="text"
+                            v-maska
+                            data-maska="####" />
+                        <div v-if="cvvIsValid == false" class="checkout-invalid-feedback"> {{ cardCVVErrorMessage }} </div>
                     </div>
 
                     <div class="col-span-3">
@@ -776,38 +845,57 @@ export default {
                 <!-- End PIX Tab -->
 
                 <!-- Billet Tab -->
-                <div class="lg:col-span-2 my-2" v-show="tab === 3">
-                    Boleto bancário
+                <div class="lg:col-span-2 mt-2" v-show="tab === 3">
+                    <span class="block text-base font-semibold text-slate-600 mb-4">
+                        Boleto bancário (somente à vista)
+                    </span>
+                    <span class="block mb-2">
+                        <CheckCircleIcon class="w-4 h-4 text-indigo-600 inline-block mb-[2px]" />
+                        <span class="leading-5 tracking-tight font-medium text-sm text-gray-500">
+                            Pagamentos com Boleto bancário podem levar até 3 dias úteis para serem compensados e então ter os produtos liberados.
+                        </span>
+                    </span>
+                    <span class="block mb-2">
+                        <CheckCircleIcon class="w-4 h-4 text-indigo-600 inline-block mb-[2px]" />
+                        <span class="leading-5 tracking-tight font-medium text-sm text-gray-500">
+                            Atente-se ao vencimento do boleto. Você pode pagar o boleto em qualquer banco ou casa lotérica até o dia do vencimento.
+                        </span>
+                    </span>
+                    <span class="block mb-2">
+                        <CheckCircleIcon class="w-4 h-4 text-indigo-600 inline-block mb-[2px]" />
+                        <span class="leading-5 tracking-tight font-medium text-sm text-gray-500">
+                            Depois do pagamento, verifique seu e-mail para receber os dados de acesso ao produto (verifique também a caixa de SPAM).
+                        </span>
+                    </span>
                 </div>
                 <!-- End Billet Tab -->
 
-
-                <CheckoutStep :hasNumber="false" title="Aproveite também com descontos incríveis:" class="mt-4" />
-
+                <!-- Order bumps -->
+                <CheckoutStep :hasNumber="false" title="🔥 Aproveite e leve também:" class="mt-4" />
                 <div class="lg:col-span-2">
                     <OrderBump />
                 </div>
+                <!-- End Order bumps -->
 
                 <div class="lg:col-span-2">
-                    <span class="text-base text-indigo-600 font-bold tracking-tight block md:text-right mb-2">
+                    <span class="block text-base text-indigo-600 font-bold tracking-tight lg:text-right">
                         Valor total: 12x de R$ 22,70 no cartão
+                    </span>
+                    <span class="block mt-1 mb-4 lg:mb-5 text-sm font-medium text-slate-500 lg:text-right">
+                        ou R$ 197,00 à vista
                     </span>
                 </div>
 
                 <!-- Buy Button -->
                 <div class="lg:col-span-2">
-                    <button id="buyBtn" :class="Classes.button" @click="onPurchase">
+                    <button id="buyBtn" :class="Classes.button" @click="submitPayment">
                         Comprar agora
                     </button>
-                    <span class="block mt-4 text-center text-xs font-medium tracking-wide text-slate-400">
-                        Você está em um ambiente seguro.
-                    </span>
-
-                    <div class="flex gap-5 lg:gap-6 xl:gap-8 flex-col md:flex-row items-center justify-center mt-6 mb-4">
-                        <div class="flex items-center gap-2 text-sm font-semibold text-slate-600 tracking-tight">
-                            <div v-html="icons.lock" class="w-4 h-4 text-slate-600 mt[-2px]"></div>
-                            Pagamento seguro
-                        </div>
+                    <!-- <span class="block mt-4 text-center text-xs font-medium tracking-normal text-slate-400">
+                                Você está em um ambiente seguro.
+                        </span> -->
+                    <div class="flex gap-6 xl:gap-8 flex-col md:flex-row items-center justify-center mt-8 mb-4">
+                        <img :src="PagamentoSeguroSvg" class="h-6" />
                         <div class="flex flex-row items-center">
                             <FooterPaymentLabels />
                         </div>

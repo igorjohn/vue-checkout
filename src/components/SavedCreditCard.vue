@@ -23,14 +23,14 @@ export default {
                     brand: 'Visa',
                     lastDigits: '**** **** **** 6763',
                     expiration: '11/28',
-                    isActive: true
+                    isActive: false
                 },
                 {
                     id: 3,
                     brand: 'Elo',
                     lastDigits: '**** **** **** 6763',
                     expiration: '11/28',
-                    isActive: true
+                    isActive: false
                 }
             ]
         }
