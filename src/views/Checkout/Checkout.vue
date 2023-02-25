@@ -1,22 +1,7 @@
 <script setup>
-
 import { ref } from 'vue'
-import { Listbox, ListboxButton, ListboxOptions, ListboxOption } from '@headlessui/vue'
-import { CheckCircleIcon, ChevronDownIcon } from '@heroicons/vue/20/solid'
 import { CreditCardIcon } from '@heroicons/vue/24/outline'
-
 import { vMaska } from "maska";
-
-let openLoader = ref(false);
-function onPurchase() {
-    openLoader.value = true;
-}
-function closeLoader() {
-    openLoader.value = false;
-}
-
-let isOpenDiscountCoupon = ref(false);
-
 
 const installment = [
     { installments: 1, text: '1x R$ 197,00 (à vista)' },
@@ -34,10 +19,7 @@ const installment = [
 ];
 const selectedInstallment = ref(installment[11]);
 
-
-const expirationYear = ref(null);
-const expirationMonth = ref(null);
-
+// Máscaras vmaska - inputs:
 const maskName = {
     tokens: {
         A: {
@@ -45,7 +27,7 @@ const maskName = {
             transform: chr => chr.toUpperCase()
         },
         a: {
-            multiple: true,
+            multiple: true
         }
     }
 }
@@ -82,30 +64,32 @@ const maskEmail = {
         }
     }
 }
-
-
 </script >
 
 <script type="text/javascript">
 
-// Mock images
+// Mock images:
 import BannerImg from '@/assets/img/mock/checkout-banner.png';
 import OrderBump01 from '@/assets/img/mock/orderbump-01.jpeg';
-import OrderBump02 from '@/assets/img/mock/orderbump-02.jpeg';
 
+// svgs:
 import PagamentoSeguroSvg from '@/assets/img/pagamento-seguro.svg';
 import SvgFlags from '@/assets/img/payment-labels.svg';
+import IconPix from '@/assets/img/icon-pix.svg';
 
+// checkout components:
 import Badges from "@/components/Badges.vue";
 import CountdownTimer from "@/components/CountdownTimer.vue";
 import FooterDisclaimer from "@/components/FooterDisclaimer.vue";
 import FooterPaymentLabels from "@/components/FooterPaymentLabels.vue";
 import OrderBump from "@/components/OrderBump.vue";
-
 import SelectCountryFlags from "@/components/SelectCountryFlags.vue";
 import CreditCardSavedData from "@/components/SavedCreditCard.vue";
 import CheckoutStep from "@/components/CheckoutStep.vue";
 import FormLabel from "@/components/FormLabel.vue";
+import Discount from "@/components/Discount.vue";
+import TabPix from "@/components/TabPix.vue";
+import TabBillet from "@/components/TabBillet.vue";
 
 export default {
     data() {
@@ -114,6 +98,7 @@ export default {
             tab: 1,
             checkoutHas2Columns: true,
             SvgPaymentLabels: SvgFlags,
+            SvgIconPix: IconPix,
 
             Elements: {
                 List: {
@@ -125,93 +110,6 @@ export default {
                         { li: 'Saiba como ser promovido a função que você tanto almeja.' }
                     ]
                 },
-            },
-
-            Classes: {
-                checkoutLeftColumn: 'w-full max-w-3xl mx-auto pt-6 pb-8 lg:pb-10 px-3 flex flex-col gap-4',
-                checkoutRightColumn: 'xl:pt-6 pb-12 px-3 flex flex-col gap-5',
-                input: 'border border-slate-300 text-gray-700 text-sm bg-white placeholder-gray-400 focus:border-indigo-400 w-full rounded-md py-2 px-3 font-medium outline-none transition duration-500 focus:ring-0 disabled:cursor-default disabled:bg-[#F5F7FD]',
-                button: 'flex w-full justify-center rounded-md border-0 bg-green-500 text-lg tracking-tight font-bold text-white hover:text-white hover:bg-green-400 focus:outline-none focus:ring-2 focus:ring-green-700 focus:ring-offset-0',
-                containerPayment: 'w-full grid grid-cols-1 lg:grid-cols-2 gap-3 px-1',
-                discount: {
-                    input: 'h-[32px] border border-slate-300 text-gray-600 text-xs bg-white placeholder-gray-400 focus:border-indigo-400 grow rounded py-2 px-2.5 font-medium outline-none transition duration-500 focus:ring-0 disabled:cursor-default disabled:bg-[#F5F7FD]',
-                    button: 'h-[32px] flex justify-center items-center rounded border-0 bg-indigo-600 text-xs tracking-tight font-bold min-w-[80px] text-white hover:text-white hover:bg-indigo-600 focus:outline-none focus:ring-0 focus:ring-offset-0',
-                },
-                tabs: {
-                    default: 'text-sm bg-white flex flex-col lg:flex-row items-center lg:justify-start justify-center gap-1 lg:gap-[0.35rem] w-[29%] lg:w-1/6 px-4 py-2.5 lg:py-4 font-semibold rounded-md border hover:border-indigo-600 hover:text-indigo-500 transition duration-300',
-                    selected: 'border-indigo-600 text-indigo-500',
-                    notSelected: 'border-slate-400 text-gray-500 opacity-70 grayscale',
-                },
-                pixTab: {
-                    titleWrapper: 'flex items-center justify-start gap-1 text-base tracking-tight font-bold text-[#33bcad] mb-1',
-                    secondaryText: 'block text-xs text-gray-500 mb-4 font-medium'
-                }
-            },
-
-            icons: {
-                pix: `
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-            <g fill="#32bcad" fill-rule="evenodd">
-                <path d="M112.57 391.19c20.056 0 38.928-7.808 53.12-22l76.693-76.692c5.385-5.404 14.765-5.384 20.15 0l76.989 76.989c14.191 14.172 33.045 21.98 53.12 21.98h15.098l-97.138 97.139c-30.326 30.344-79.505 30.344-109.85 0l-97.415-97.416h9.232zm280.068-271.294c-20.056 0-38.929 7.809-53.12 22l-76.97 76.99c-5.551 5.53-14.6 5.568-20.15-.02l-76.711-76.693c-14.192-14.191-33.046-21.999-53.12-21.999h-9.234l97.416-97.416c30.344-30.344 79.523-30.344 109.867 0l97.138 97.138h-15.116z" />
-                <path d="M22.758 200.753l58.024-58.024h31.787c13.84 0 27.384 5.605 37.172 15.394l76.694 76.693c7.178 7.179 16.596 10.768 26.033 10.768 9.417 0 18.854-3.59 26.014-10.75l76.989-76.99c9.787-9.787 23.331-15.393 37.171-15.393h37.654l58.3 58.302c30.343 30.344 30.343 79.523 0 109.867l-58.3 58.303H392.64c-13.84 0-27.384-5.605-37.171-15.394l-76.97-76.99c-13.914-13.894-38.172-13.894-52.066.02l-76.694 76.674c-9.788 9.788-23.332 15.413-37.172 15.413H80.782L22.758 310.62c-30.344-30.345-30.344-79.524 0-109.868" />
-            </g>
-        </svg>`,
-
-                lock: `
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
-            <path fill-rule="evenodd" d="M12 1.5a5.25 5.25 0 00-5.25 5.25v3a3 3 0 00-3 3v6.75a3 3 0 003 3h10.5a3 3 0 003-3v-6.75a3 3 0 00-3-3v-3c0-2.9-2.35-5.25-5.25-5.25zm3.75 8.25v-3a3.75 3.75 0 10-7.5 0v3h7.5z" clip-rule="evenodd" />
-        </svg>`,
-
-                ticket: `
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 6v.75m0 3v.75m0 3v.75m0 3V18m-9-5.25h5.25M7.5 15h3M3.375 5.25c-.621 0-1.125.504-1.125 1.125v3.026a2.999 2.999 0 010 5.198v3.026c0 .621.504 1.125 1.125 1.125h17.25c.621 0 1.125-.504 1.125-1.125v-3.026a2.999 2.999 0 010-5.198V6.375c0-.621-.504-1.125-1.125-1.125H3.375z" />
-        </svg>`,
-
-                pixLiClock: `
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
-        </svg>`,
-
-                pixLiQRCode: `
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5">
-            <path fill-rule="evenodd" d="M3.75 2A1.75 1.75 0 002 3.75v3.5C2 8.216 2.784 9 3.75 9h3.5A1.75 1.75 0 009 7.25v-3.5A1.75 1.75 0 007.25 2h-3.5zM3.5 3.75a.25.25 0 01.25-.25h3.5a.25.25 0 01.25.25v3.5a.25.25 0 01-.25.25h-3.5a.25.25 0 01-.25-.25v-3.5zM3.75 11A1.75 1.75 0 002 12.75v3.5c0 .966.784 1.75 1.75 1.75h3.5A1.75 1.75 0 009 16.25v-3.5A1.75 1.75 0 007.25 11h-3.5zm-.25 1.75a.25.25 0 01.25-.25h3.5a.25.25 0 01.25.25v3.5a.25.25 0 01-.25.25h-3.5a.25.25 0 01-.25-.25v-3.5zm7.5-9c0-.966.784-1.75 1.75-1.75h3.5c.966 0 1.75.784 1.75 1.75v3.5A1.75 1.75 0 0116.25 9h-3.5A1.75 1.75 0 0111 7.25v-3.5zm1.75-.25a.25.25 0 00-.25.25v3.5c0 .138.112.25.25.25h3.5a.25.25 0 00.25-.25v-3.5a.25.25 0 00-.25-.25h-3.5zm-7.26 1a1 1 0 00-1 1v.01a1 1 0 001 1h.01a1 1 0 001-1V5.5a1 1 0 00-1-1h-.01zm9 0a1 1 0 00-1 1v.01a1 1 0 001 1h.01a1 1 0 001-1V5.5a1 1 0 00-1-1h-.01zm-9 9a1 1 0 00-1 1v.01a1 1 0 001 1h.01a1 1 0 001-1v-.01a1 1 0 00-1-1h-.01zm9 0a1 1 0 00-1 1v.01a1 1 0 001 1h.01a1 1 0 001-1v-.01a1 1 0 00-1-1h-.01zm-3.5-1.5a1 1 0 011-1H12a1 1 0 011 1v.01a1 1 0 01-1 1h-.01a1 1 0 01-1-1V12zm6-1a1 1 0 00-1 1v.01a1 1 0 001 1H17a1 1 0 001-1V12a1 1 0 00-1-1h-.01zm-1 6a1 1 0 011-1H17a1 1 0 011 1v.01a1 1 0 01-1 1h-.01a1 1 0 01-1-1V17zm-4-1a1 1 0 00-1 1v.01a1 1 0 001 1H12a1 1 0 001-1V17a1 1 0 00-1-1h-.01z" clip-rule="evenodd" />
-        </svg>`,
-
-                pixLiShield: `
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5">
-            <path fill-rule="evenodd" d="M9.661 2.237a.531.531 0 01.678 0 11.947 11.947 0 007.078 2.749.5.5 0 01.479.425c.069.52.104 1.05.104 1.59 0 5.162-3.26 9.563-7.834 11.256a.48.48 0 01-.332 0C5.26 16.564 2 12.163 2 7c0-.538.035-1.069.104-1.589a.5.5 0 01.48-.425 11.947 11.947 0 007.077-2.75zm4.196 5.954a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z" clip-rule="evenodd" />
-        </svg>`,
-
-            },
-
-
-            CreditCard: {
-                expYear: [
-                    { year: 2023 },
-                    { year: 2024 },
-                    { year: 2025 },
-                    { year: 2026 },
-                    { year: 2027 },
-                    { year: 2028 },
-                    { year: 2029 },
-                    { year: 2030 },
-                    { year: 2031 },
-                    { year: 2032 }
-                ],
-                expMonth: [
-                    { month: 1 },
-                    { month: 2 },
-                    { month: 3 },
-                    { month: 4 },
-                    { month: 5 },
-                    { month: 6 },
-                    { month: 7 },
-                    { month: 8 },
-                    { month: 9 },
-                    { month: 10 },
-                    { month: 11 },
-                    { month: 12 }
-                ]
             },
 
             hasSavedCards: false,
@@ -244,11 +142,11 @@ export default {
             cardHolder: '',
 
             // Validação - Card Expiration date
-            cardExpirationDateIsValid: null,
+            cardExpirationDateIsValid: undefined,
             cardExpirationDateErrorMessage: '',
             cardExpirationDate: null,
-            cardExpirationMonth: null,
             cardExpirationYear: null,
+            cardExpirationMonth: null,
 
             // Validação - Card Number
             cardNumberIsValid: null,
@@ -258,7 +156,7 @@ export default {
 
             // Validação - CVV
             cvvIsValid: null,
-            cardCVVErrorMessage: '',
+            cvvErrorMessage: '',
             cvv: null,
 
         }
@@ -268,9 +166,8 @@ export default {
         paymentPix() { this.tab = 2; },
         paymentBillet() { this.tab = 3; },
 
-
         // Validations:
-        ValidateName(val) {
+        validateName(val) {
             this.nameIsValid = false;
             this.nameErrorMessage = 'Digite o seu nome completo.'
 
@@ -280,7 +177,7 @@ export default {
             if (val.length > 4) this.nameIsValid = true;
         },
 
-        ValidateEmail(mail) {
+        validateEmail(mail) {
             const EmailDomains = [
                 'hotmail.com',
                 'gmail.com',
@@ -299,8 +196,8 @@ export default {
                 const getLength = mail.split('@').length;
                 const query = mail.split('@')[getLength - 1];
 
-                const domain = RegExp(`.*${query.toLowerCase().split('').join('.*')}.*`)
-                const matches = EmailDomains.filter(v => v.toLowerCase().match(domain))
+                const domain = RegExp(`.*${query.toLowerCase().split('').join('.*')}.*`);
+                const matches = EmailDomains.filter(v => v.toLowerCase().match(domain));
 
                 this.emailSuggest = matches;
             }
@@ -312,20 +209,19 @@ export default {
             if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(mail)) {
                 this.emailIsValid = true;
                 this.showEmailAutoSuggest = false;
-
             } else {
                 this.emailIsValid = false;
-                if (mail == '' || !mail) this.emailErrorMessage = 'Este campo é obrigatório.'
+                if (mail == '' || !mail) this.emailErrorMessage = 'Este campo é obrigatório.';
             }
         },
 
-        SelectEmailSuggest(suggested) {
+        selectEmailSuggest(suggested) {
             this.showEmailAutoSuggest = false;
             this.email = this.email.split('@')[0] + '@' + suggested;
             this.emailIsValid = true;
         },
 
-        ValidatePhone(phone) {
+        validatePhone(phone) {
             this.phoneIsValid = false;
             let phoneNumbers = phone.replace(/[\s.,-,/(,/)]*/igm, '');
 
@@ -334,11 +230,11 @@ export default {
 
             } else {
                 this.phoneIsValid = false;
-                this.phoneErrorMessage = "Digite um telefone válido."
+                this.phoneErrorMessage = "Digite um telefone válido.";
             }
         },
 
-        ValidateCPF(val) {
+        validateCPF(val) {
             this.cpfIsValid = false;
             this.cpfErrorMessage = 'Digite um CPF válido.';
 
@@ -370,13 +266,13 @@ export default {
                 return true;
             }
 
-            if (this.doc == '') this.cpfErrorMessage = 'Este campo é obrigatório.'
+            if (this.doc == '') this.cpfErrorMessage = 'Este campo é obrigatório.';
 
             if (isCpfValid() == false) this.cpfIsValid = false;
             if (isCpfValid() == true) this.cpfIsValid = true;
         },
 
-        ValidateCardHolder(val) {
+        validateCardHolder(val) {
             this.cardHolderIsValid = false;
             this.cardHolderErrorMessage = 'Digite o nome do titular do cartão.';
             if (val == '' || !val) this.cardHolderErrorMessage = 'Este campo é obrigatório.';
@@ -395,7 +291,7 @@ export default {
             if (year && month && year == currentYear && month > currentMonth) this.cardExpirationDateIsValid = true;
         },
 
-        ValidateCardNumber(val) {
+        validateCardNumber(val) {
             this.cardNumberIsValid = false;
             this.cardFlag = undefined;
 
@@ -411,7 +307,7 @@ export default {
                     { flag: 'mastercard', regex: /^(5[1-5]\d{4}|2(2(2[1-9]\d{2}|[3-9]\d{3})|[3-6]\d{4}|7([01]\d{3}|20\d{2})))/ },
                     { flag: 'amex', regex: /^3[47]\d{4}/ },
                     { flag: 'hipercard', regex: /^(?:3841[046]0|6(?:06282|37(?:095|5(?:68|99)|6(?:09|12))))/ }
-                ]
+                ];
 
                 for (let i = 0; i < cardFlagsRegex.length; i++) {
                     if (cardFlagsRegex[i].regex.test(numbers)) this.cardFlag = cardFlagsRegex[i].flag;
@@ -424,7 +320,6 @@ export default {
                 }
 
                 if (numbers.length >= 16) {
-
                     // Luhn's algorythm:
                     let multiplier = "2121212121212121";  // One more character added...
                     let multipliedNumber;
@@ -438,70 +333,19 @@ export default {
                     }
                     let check = sum % 10; // Simpler now because all digits were processed
                     if (check == 0) { // Sum is multiple of 10
-                        console.log(`${val} is a valid Credit Card number.`);
                         this.cardNumberIsValid = true;
                     } else {
                         this.cardNumberIsValid = false;
                         this.cardNumberErrorMessage = 'Informe um número de cartão válido.'
-                        console.log(`${val} is not a valid Credit Card number.`);
                     }
                 }
             }
-
         },
 
         validateCVV(cvv) {
             this.cvvIsValid = false;
-            this.cardCVVErrorMessage = 'Campo obrigatório.';
-
+            this.cvvErrorMessage = 'Campo obrigatório.';
             if (cvv && cvv.length >= 3) this.cvvIsValid = true;
-        },
-
-        submitPayment(e) {
-            console.log('dados inválidos');
-            e.preventDefault();
-
-            // Se a Tab 'Cartão' estiver selecionada:
-            if (this.tab == 1) {
-                if (!this.cvv || this.cvv == '' || this.cvvIsValid == false) {
-                    this.validateCVV(this.cvv);
-                    this.$refs.cvv.focus();
-                }
-                if (!this.expirationYear || this.expirationYear == '' || !this.expirationMonth || this.expirationMonth == '' || this.cardExpirationDateIsValid == false) {
-                    this.validateCardExpirationDate(this.expirationMonth, this.expirationYear)
-                    this.$refs.expirationMonth.focus();
-                }
-                if (!this.cardHolder || this.cardHolder == '' || this.cardHolderIsValid == false) {
-                    this.ValidateCardHolder(this.cardHolder);
-                    this.$refs.cardHolder.focus();
-                }
-                if (!this.cardNumber || this.cardNumber == '' || this.cardNumberIsValid == false) {
-                    this.ValidateCardNumber(this.cardNumber);
-                    this.$refs.cardNumber.focus();
-                }
-            }
-
-            if (!this.doc || this.doc == '' || this.cpfIsValid == false) {
-                this.ValidateCPF(this.doc);
-                this.$refs.doc.focus();
-            }
-            if (!this.phone || this.phone == '' || this.phoneIsValid == false) {
-                this.ValidatePhone(this.phone);
-                this.$refs.phone.focus();
-            }
-            if (!this.email || this.email == '' || this.emailIsValid == false) {
-                this.ValidateEmail(this.email);
-                this.$refs.email.focus();
-            }
-            if (!this.name || this.name == '' || this.nameIsValid == false) {
-                this.ValidateName(this.name);
-                this.$refs.name.focus();
-            }
-
-            if (this.nameIsValid == true && this.emailIsValid == true && this.phoneIsValid == true && this.cpfIsValid == true) {
-                console.log('dados válidos')
-            }
-
         },
 
         checkSavedCards(event) {
@@ -515,22 +359,17 @@ export default {
 </script>
 
 <template>
-    <!-- <div class="w-full flex gap-2 lg:gap-3 items-center justify-center bg-slate-800 px-4 py-2.5">
-                                                                                                                                                                                                                                                                                                                                                                                                                                                    <div class="rounded-full w-4 h-4 lg:w-5 lg:h-5 aspect-square bg-green-600 text-white flex items-center justify-center">
-                                                                                                                                                                                                                                                                                                                                                                                                                                                        <div v-html="icons.lock" class="w-2.5 h-2.5 lg:w-3 lg:h-3"></div>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                    </div>
-                                                                                                                                                                                                                                                                                                                                                                                                                                            </span>-->
     <CountdownTimer />
 
     <div id="checkout-container" class="w-full flex flex-col xl:flex-row xl:justify-center">
         <!-- Checkout Left Column -->
-        <div :class="[checkoutHas2Columns ? 'xl:mx-0 xl:w-2/3 xl:px-6' : '', Classes.checkoutLeftColumn]">
+        <div :class="[{ 'xl:mx-0 xl:w-2/3 xl:px-6': checkoutHas2Columns }, 'w-full max-w-3xl mx-auto pt-6 pb-8 lg:pb-10 px-3 flex flex-col gap-4']">
 
             <!-- Checkout Banner -->
             <img :src="BannerImg" class="w-full rounded-lg" />
 
             <!-- Payment form container -->
-            <div :class="Classes.containerPayment">
+            <div class="w-full grid grid-cols-1 lg:grid-cols-2 gap-3 px-1">
 
                 <!-- Você está adquirindo -->
                 <div class="rounded-md lg:col-span-2 px-3 lg:px-5 py-3.5 lg:py-4 border border-zinc-200 mb-3">
@@ -558,13 +397,13 @@ export default {
                 <div class="lg:col-span-2">
                     <FormLabel name="Nome completo:" />
                     <input
-                        @input="ValidateName(name)"
+                        @input="validateName(name)"
                         v-model="name"
                         ref="name"
                         autocomplete="name"
                         v-maska:[maskName]
                         data-maska="Aa a a a a"
-                        :class="[{ 'input-has-error': nameIsValid == false }, Classes.input, 'pepper-input icon-user']"
+                        :class="[{ 'input-has-error': nameIsValid == false }, 'pepper-input icon-user']"
                         required
                         inputmode="text"
                         type="text" />
@@ -574,23 +413,22 @@ export default {
                 <div class="lg:col-span-2 relative">
                     <FormLabel name="Digite seu e-mail:" />
                     <input
-                        :class="[{ 'input-has-error': emailIsValid == false }, Classes.input, 'pepper-input icon-email']"
+                        :class="[{ 'input-has-error': emailIsValid == false }, 'pepper-input icon-email']"
                         v-model="email"
                         autocomplete="email"
                         ref="email"
-                        @keyup="ValidateEmail(email)"
                         v-maska:[maskEmail]
                         data-maska="aab"
                         required
                         inputmode="email"
-                        @keyup.enter="SelectEmailSuggest(emailSuggest[0])"
+                        @keyup="validateEmail(email)"
+                        @keyup.enter="selectEmailSuggest(emailSuggest[0])"
                         type="email" />
-
                     <!-- Email autosuggest -->
                     <transition appear>
                         <div v-if="showEmailAutoSuggest && emailSuggest.length > 0" class="w-full rounded-md bg-gray-50 border border-slate-400 shadow-lg absolute overflow-hidden top-100 z-40 mt-1">
                             <template v-for="sug in emailSuggest">
-                                <li @click.stop.prevent="SelectEmailSuggest(sug)"
+                                <li @click.stop.prevent="selectEmailSuggest(sug)"
                                     :class="sug == emailSuggest[0] ? 'font-semibold bg-indigo-50 text-slate-700' : 'font-medium text-gray-600 hover:bg-indigo-100 hover:text-slate-700'"
                                     class="pr-3 pl-8 py-2.5 text-sm list-none cursor-pointer transition duration-600">
                                     {{ email.split('@')[0] + '@' + sug }}
@@ -606,11 +444,11 @@ export default {
                     <div class="flex flex-row">
                         <SelectCountryFlags />
                         <input
-                            :class="[{ 'input-has-error': phoneIsValid == false }, Classes.input, 'pepper-input icon-phone rounded-l-none rounded-r-md']"
+                            :class="[{ 'input-has-error': phoneIsValid == false }, 'pepper-input icon-phone']"
                             v-model="phone"
                             autocomplete="phone"
                             ref="phone"
-                            @input="ValidatePhone(phone)"
+                            @input="validatePhone(phone)"
                             v-maska:[maskPhone]
                             data-maska="['(NN) N### ####', '(NN) N#### ####']"
                             required
@@ -623,10 +461,10 @@ export default {
                 <div class="lg:col-span-1">
                     <FormLabel name="CPF:" />
                     <input
-                        :class="[{ 'input-has-error': cpfIsValid == false }, Classes.input]"
+                        :class="[{ 'input-has-error': cpfIsValid == false }, 'pepper-input']"
                         v-model="doc"
                         ref="doc"
-                        @input="ValidateCPF(doc)"
+                        @input="validateCPF(doc)"
                         v-maska
                         data-maska="###.###.###-##"
                         required
@@ -636,23 +474,7 @@ export default {
                 </div>
 
                 <div class="lg:col-span-2 pt-4">
-                    <div class="w-full rounded bg-gray-50 border border-gray-150 hover:border-indigo-300 transition duration-700">
-                        <div @click="isOpenDiscountCoupon = !isOpenDiscountCoupon" class="flex gap-2 px-3 py-3.5 items-center justify-between cursor-pointer">
-                            <div class="inline-flex gap-2 items-center justify-start">
-                                <div v-html="icons.ticket" class="w-4 h-4 text-slate-500 rotate-[325deg]"></div>
-                                <span class="text-sm text-indigo-500 font-medium">Tem um cupom de desconto?</span>
-                            </div>
-                            <div class="inline-flex items-center justify-center ml-auto mr-1 transition duration-500">
-                                <ChevronDownIcon :class="[isOpenDiscountCoupon ? 'rotate-180' : 'rotate-0', 'w-4 h-4']" />
-                            </div>
-                        </div>
-                        <div v-if="isOpenDiscountCoupon" class="flex items-center justify-start gap-1 transition duration-500 w-full px-4 pb-4">
-                            <input :class="Classes.discount.input" type="text" inputmode="text" placeholder="Digite o código do cupom" />
-                            <button :class="Classes.discount.button">
-                                Aplicar
-                            </button>
-                        </div>
-                    </div>
+                    <Discount />
                 </div>
 
                 <CheckoutStep :hasNumber="true" :StepNumber="2" title="Dados de pagamento" class="mt-4" />
@@ -661,21 +483,17 @@ export default {
                 <CreditCardSavedData @hasSavedCardData="checkSavedCards" />
 
                 <div class="flex justify-start gap-x-2 lg:col-span-2" v-show="hasSavedCards == false">
-                    <button
-                        @click="paymentCreditCard"
-                        :class="[Classes.tabs.default, tab == 1 ? Classes.tabs.selected : Classes.tabs.notSelected, 'flex flex-col lg:flex-row items-center justify-center tracking-tight']">
+                    <button @click="paymentCreditCard" :class="[{ 'selected-tab': tab == 1 }, 'pepper-payment-tab']">
                         <CreditCardIcon class='w-6 h-6 lg:w-5 flex items-center' />
                         Cartão
                     </button>
-                    <button
-                        @click="paymentPix"
-                        :class="[Classes.tabs.default, tab == 2 ? Classes.tabs.selected : Classes.tabs.notSelected, 'flex flex-col lg:flex-row items-center justify-center tracking-tight']">
-                        <span v-html="icons.pix" class='w-5 h-6 lg:w-[17px] flex items-center'></span>
+                    <button @click="paymentPix" :class="[{ 'selected-tab': tab == 2 }, 'pepper-payment-tab']">
+                        <span class='w-5 h-6 lg:w-[17px] flex items-center'>
+                            <img :src="SvgIconPix" />
+                        </span>
                         PIX
                     </button>
-                    <button
-                        @click="paymentBillet"
-                        :class="[Classes.tabs.default, tab == 3 ? Classes.tabs.selected : Classes.tabs.notSelected, 'flex flex-col lg:flex-row items-center justify-center tracking-tight']">
+                    <button @click="paymentBillet" :class="[{ 'selected-tab': tab == 3 }, 'pepper-payment-tab']">
                         <div class="inline-flex items-center justify-center lg:justify-start h-6 w-auto">
                             <img class="w-7" :src="SvgPaymentLabels + '#boleto'" />
                         </div>
@@ -684,22 +502,21 @@ export default {
                 </div>
 
                 <!-- Credit card Tab -->
-                <div class="lg:col-span-2 grid grid-cols-3 gap-3 gap-x-2 my-2" v-if="hasSavedCards == false && tab === 1">
+                <div class="lg:col-span-2 grid grid-cols-3 gap-3 gap-x-2 my-2" v-if="hasSavedCards == false && tab == 1">
                     <div class="col-span-3">
                         <FormLabel name="Número do cartão:" />
                         <div class="relative">
                             <input
-                                @input="ValidateCardNumber(cardNumber)"
+                                @input="validateCardNumber(cardNumber)"
                                 v-model="cardNumber"
                                 autocomplete="cardNumber"
                                 ref="cardNumber"
                                 v-maska
                                 data-maska="#### #### #### ####"
-                                :class="[{ 'input-has-error': cardNumberIsValid == false }, Classes.input]"
+                                :class="[{ 'input-has-error': cardNumberIsValid == false }, 'pepper-input']"
                                 required
                                 inputmode="tel"
                                 type="text" />
-
                             <div v-if="cardFlag && cardFlag !== undefined" class="absolute top-0 right-0 w-auto p-2 z-10 flex items-center">
                                 <img class="h-[24px] w-[36px]" :src="SvgPaymentLabels + '#' + cardFlag" />
                             </div>
@@ -710,13 +527,13 @@ export default {
                     <div class="col-span-3">
                         <FormLabel name="Nome impresso no cartão:" />
                         <input
-                            @input="ValidateCardHolder(cardHolder)"
+                            @input="validateCardHolder(cardHolder)"
                             v-model="cardHolder"
                             autocomplete="cardHolder"
                             ref="cardHolder"
                             v-maska:[maskCardHolder]
                             data-maska="A A A A"
-                            :class="[{ 'input-has-error': cardHolderIsValid == false }, Classes.input]"
+                            :class="[{ 'input-has-error': cardHolderIsValid == false }, 'pepper-input']"
                             required
                             inputmode="text"
                             type="text" />
@@ -727,16 +544,16 @@ export default {
                         <FormLabel name="Mês:" />
                         <select
                             required
-                            :class="[Classes.input, { 'text-gray-400': !expirationMonth, 'border-red-500 focus:border-red-500': expirationMonth !== null && expirationYear !== null && cardExpirationDateIsValid == false }]"
-                            v-model="expirationMonth"
-                            ref="expirationMonth"
-                            @change="validateCardExpirationDate(expirationMonth, expirationYear)">
+                            :class="[{ 'text-gray-400': !cardExpirationMonth, 'border-red-500 focus:border-red-500': cardExpirationMonth !== null && cardExpirationYear !== null && cardExpirationDateIsValid == false }, 'pepper-input']"
+                            v-model="cardExpirationMonth"
+                            ref="cardExpirationMonth"
+                            @change="validateCardExpirationDate(cardExpirationMonth, cardExpirationYear)">
                             <option :value="null" disabled>Mês</option>
-                            <template v-for="m in CreditCard.expMonth">
-                                <option :value="(m.month).toString().padStart(2, '0')">{{ (m.month).toString().padStart(2, '0') }}</option>
+                            <template v-for="month in [...Array(12)].map((a, b) => (1 + b).toString().padStart(2, '0'))">
+                                <option :value="month">{{ month }}</option>
                             </template>
                         </select>
-                        <div v-if="expirationMonth !== null && expirationYear !== null && cardExpirationDateIsValid == false" class="checkout-invalid-feedback">
+                        <div v-if="cardExpirationMonth !== null && cardExpirationYear !== null && cardExpirationDateIsValid == false" class="checkout-invalid-feedback">
                             {{ cardExpirationDateErrorMessage }}
                         </div>
                     </div>
@@ -745,13 +562,13 @@ export default {
                         <FormLabel name="Ano:" />
                         <select
                             required
-                            :class="[Classes.input, { 'text-gray-400': !expirationYear, 'border-red-500 focus:border-red-500': expirationMonth !== null && expirationYear !== null && cardExpirationDateIsValid == false }]"
-                            v-model="expirationYear"
-                            ref="expirationYear"
-                            @change="validateCardExpirationDate(expirationMonth, expirationYear)">
+                            :class="[{ 'text-gray-400': !cardExpirationYear, 'border-red-500 focus:border-red-500': cardExpirationMonth !== null && cardExpirationYear !== null && cardExpirationDateIsValid == false }, 'pepper-input']"
+                            v-model="cardExpirationYear"
+                            ref="cardExpirationYear"
+                            @change="validateCardExpirationDate(cardExpirationMonth, cardExpirationYear)">
                             <option :value="null" disabled>Ano</option>
-                            <template v-for="y in CreditCard.expYear">
-                                <option :value="y.year">{{ y.year }}</option>
+                            <template v-for="year in [...Array(10)].map((a, b) => new Date().getFullYear() + b)">
+                                <option :value="year">{{ year }}</option>
                             </template>
                         </select>
                     </div>
@@ -759,7 +576,7 @@ export default {
                     <div class="col-span-1">
                         <FormLabel name="CVV:" />
                         <input
-                            :class="[{ 'border-red-500 focus:border-red-500': cvvIsValid == false }, Classes.input]"
+                            :class="[{ 'border-red-500 focus:border-red-500': cvvIsValid == false }, 'pepper-input icon-lock']"
                             required
                             @input="validateCVV(cvv)"
                             v-model="cvv"
@@ -770,84 +587,36 @@ export default {
                             type="text"
                             v-maska
                             data-maska="####" />
-                        <div v-if="cvvIsValid == false" class="checkout-invalid-feedback"> {{ cardCVVErrorMessage }} </div>
+                        <div v-if="cvvIsValid == false" class="checkout-invalid-feedback"> {{ cvvErrorMessage }} </div>
                     </div>
-
-                    <div class="col-span-3">
-                        <FormLabel name="Parcelamento:" />
-                        <select
-                            required
-                            :class="[Classes.input]"
-                            v-model="selectedInstallment">
-                            <template v-for="inst in installment">
-                                <option :value="inst">{{ inst.text }}</option>
-                            </template>
-                        </select>
-                    </div>
+                </div>
+                <!-- Parcelamento -->
+                <div class="lg:col-span-2" v-if="tab == 1">
+                    <FormLabel name="Parcelamento:" />
+                    <select required :class="['pepper-input']" v-model="selectedInstallment">
+                        <template v-for="inst in installment">
+                            <option :value="inst">{{ inst.text }}</option>
+                        </template>
+                    </select>
                 </div>
                 <!-- End Credit card Tab -->
 
                 <!-- PIX Tab -->
-                <div class="lg:col-span-2 mt-2" v-show="tab === 2">
-                    <span class="block text-base font-semibold text-slate-600 mb-4">
-                        Pague no PIX
-                    </span>
-                    <span :class="Classes.pixTab.titleWrapper">
-                        <div v-html="icons.pixLiClock"></div>
-                        Imediato
-                    </span>
-                    <span :class="Classes.pixTab.secondaryText">
-                        Ao selecionar a opção Gerar Pix, o código para pagamento estará disponível.
-                    </span>
-                    <span :class="Classes.pixTab.titleWrapper">
-                        <div v-html="icons.pixLiQRCode"></div>
-                        Pagamento simples
-                    </span>
-                    <span :class="Classes.pixTab.secondaryText">
-                        Basta abrir o aplicativo do seu banco, procurar pelo PIX e escanear o QRcode.
-                    </span>
-                    <span :class="Classes.pixTab.titleWrapper">
-                        <div v-html="icons.pixLiShield"></div>
-                        100% Seguro
-                    </span>
-                    <span :class="Classes.pixTab.secondaryText">
-                        O pagamento com PIX foi desenvolvido pelo Banco Central para facilitar suas compras.
-                    </span>
+                <div class="lg:col-span-2 mt-2" v-show="tab == 2">
+                    <TabPix />
                 </div>
-                <!-- End PIX Tab -->
 
                 <!-- Billet Tab -->
-                <div class="lg:col-span-2 mt-2" v-show="tab === 3">
-                    <span class="block text-base font-semibold text-slate-600 mb-4">
-                        Boleto bancário (somente à vista)
-                    </span>
-                    <span class="block mb-2">
-                        <CheckCircleIcon class="w-4 h-4 text-indigo-600 inline-block mb-[2px]" />
-                        <span class="leading-5 tracking-tight font-medium text-sm text-gray-500">
-                            Pagamentos com Boleto bancário podem levar até 3 dias úteis para serem compensados e então ter os produtos liberados.
-                        </span>
-                    </span>
-                    <span class="block mb-2">
-                        <CheckCircleIcon class="w-4 h-4 text-indigo-600 inline-block mb-[2px]" />
-                        <span class="leading-5 tracking-tight font-medium text-sm text-gray-500">
-                            Atente-se ao vencimento do boleto. Você pode pagar o boleto em qualquer banco ou casa lotérica até o dia do vencimento.
-                        </span>
-                    </span>
-                    <span class="block mb-2">
-                        <CheckCircleIcon class="w-4 h-4 text-indigo-600 inline-block mb-[2px]" />
-                        <span class="leading-5 tracking-tight font-medium text-sm text-gray-500">
-                            Depois do pagamento, verifique seu e-mail para receber os dados de acesso ao produto (verifique também a caixa de SPAM).
-                        </span>
-                    </span>
+                <div class="lg:col-span-2 mt-2" v-show="tab == 3">
+                    <TabBillet />
                 </div>
-                <!-- End Billet Tab -->
 
                 <!-- Order bumps -->
                 <CheckoutStep :hasNumber="false" title="🔥 Aproveite e leve também:" class="mt-4" />
                 <div class="lg:col-span-2">
                     <OrderBump />
                 </div>
-                <!-- End Order bumps -->
+                <!-- End order bumps -->
 
                 <div class="lg:col-span-2">
                     <span class="block text-base text-indigo-600 font-bold tracking-tight lg:text-right">
@@ -860,12 +629,12 @@ export default {
 
                 <!-- Buy Button -->
                 <div class="lg:col-span-2">
-                    <button id="buyBtn" :class="Classes.button" @click="submitPayment">
+                    <button
+                        id="buyBtn"
+                        class="flex w-full justify-center rounded-md border-0 bg-green-500 text-lg tracking-tight font-bold text-white hover:text-white hover:bg-green-400 focus:outline-none focus:ring-2 focus:ring-green-700 focus:ring-offset-0"
+                        @click="submitPayment">
                         Comprar agora
                     </button>
-                    <!-- <span class="block mt-4 text-center text-xs font-medium tracking-normal text-slate-400">
-                                                Você está em um ambiente seguro.
-                                        </span> -->
                     <div class="flex gap-6 xl:gap-8 flex-col md:flex-row items-center justify-center mt-8 mb-4">
                         <img :src="PagamentoSeguroSvg" class="h-6" />
                         <div class="flex flex-row items-center">
@@ -873,11 +642,12 @@ export default {
                         </div>
                     </div>
                 </div>
+
             </div>
         </div>
 
         <!-- Checkout Right column -->
-        <div v-if="checkoutHas2Columns" :class="['max-w-xl mx-auto xl:mx-0 w-full xl:w-1/3 xl:pl-5 xl:border-l xl:border-zinc-200', Classes.checkoutRightColumn]">
+        <div v-if="checkoutHas2Columns" :class="['max-w-xl mx-auto xl:mx-0 w-full xl:w-1/3 xl:pl-5 xl:border-l xl:border-zinc-200 xl:pt-6 pb-12 px-3 flex flex-col gap-5']">
 
             <!-- Checkout List -->
             <div v-if="Elements.List && Elements.List !== []" class="flex flex-col items-start justify-start gap-2 rounded-md bg-[#eff4f9] px-3.5 py-4 lg:px-4 border border-slate-300">
@@ -894,9 +664,10 @@ export default {
                 </template>
             </div>
 
-            <!-- Checkout Badges -->
+            <!-- Badges -->
             <Badges />
 
+            <!-- Disclaimer -->
             <FooterDisclaimer />
 
         </div>
@@ -941,43 +712,31 @@ html,
 }
 
 .saved-credit-card.mastercard {
-    background-image: url('https://img6.wsimg.com/fos/react/icons/115/gd/sprite.svg#mastercard');
+    background-image: url('../../assets/img/payment-labels.svg#mastercard');
 }
 
 .saved-credit-card.visa {
-    background-image: url('https://img6.wsimg.com/fos/react/icons/115/gd/sprite.svg#visa');
+    background-image: url('../../assets/img/payment-labels.svg#visa');
 }
 
 .saved-credit-card.hipercard {
-    background-image: url('https://img6.wsimg.com/fos/react/icons/115/gd/sprite.svg#hipercard');
+    background-image: url('../../assets/img/payment-labels.svg#hipercard');
 }
 
 .saved-credit-card.elo {
-    background-image: url('https://img6.wsimg.com/fos/react/icons/115/gd/sprite.svg#elo');
+    background-image: url('../../assets/img/payment-labels.svg#elo');
 }
 
 .saved-credit-card.amex {
-    background-image: url('https://img6.wsimg.com/fos/react/icons/115/gd/sprite.svg#amex');
+    background-image: url('../../assets/img/payment-labels.svg#amex');
 }
 
 .saved-credit-card.jcb {
-    background-image: url('https://img6.wsimg.com/fos/react/icons/115/gd/sprite.svg#jcb');
+    background-image: url('../../assets/img/payment-labels.svg#jcb');
 }
 
 .saved-credit-card.discover {
-    background-image: url('https://img6.wsimg.com/fos/react/icons/115/gd/sprite.svg#discover');
-}
-
-.input-has-error,
-.input-has-error:focus {
-    border-color: rgb(239, 68, 68) !important;
-}
-
-.checkout-invalid-feedback {
-    display: block;
-    font-size: 12px;
-    color: rgb(227, 41, 41);
-    margin-top: .25rem;
+    background-image: url('../../assets/img/payment-labels.svg#discover');
 }
 
 /* Transition Appear */
@@ -1007,9 +766,76 @@ html,
 }
 
 /* Form styles */
+.input-has-error,
+.input-has-error:focus {
+    border-color: rgb(239, 68, 68) !important;
+}
+
+.checkout-invalid-feedback {
+    display: block;
+    font-size: 12px;
+    color: rgb(227, 41, 41);
+    margin-top: .25rem;
+}
+
+.pepper-input[type='text'],
+.pepper-input[type='email'],
+.pepper-input[type='url'],
+.pepper-input[type='password'],
+.pepper-input[type='number'],
+.pepper-input[type='date'],
+.pepper-input[type='datetime-local'],
+.pepper-input[type='month'],
+.pepper-input[type='search'],
+.pepper-input[type='tel'],
+.pepper-input[type='time'],
+.pepper-input[type='week'],
+.pepper-input[multiple],
+textarea.pepper-input,
+select.pepper-input,
+.pepper-input {
+    color: rgb(55, 65, 81);
+    font-weight: 500;
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+    padding: 0.5rem 0.75rem;
+    background-color: #fff !important;
+    border: 1px solid rgb(203, 213, 225);
+    transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter, -webkit-backdrop-filter;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-duration: 500ms;
+    outline: 2px solid transparent;
+    outline-offset: 2px;
+    width: 100%;
+    border-radius: 0.375rem;
+}
+
+.pepper-input[type='text']:focus,
+.pepper-input[type='email']:focus,
+.pepper-input[type='url']:focus,
+.pepper-input[type='password']:focus,
+.pepper-input[type='number']:focus,
+.pepper-input[type='date']:focus,
+.pepper-input[type='datetime-local']:focus,
+.pepper-input[type='month']:focus,
+.pepper-input[type='search']:focus,
+.pepper-input[type='tel']:focus,
+.pepper-input[type='time']:focus,
+.pepper-input[type='week']:focus,
+.pepper-input[multiple]:focus,
+textarea.pepper-input:focus,
+select.pepper-input:focus,
+.pepper-input:focus {
+    border-color: rgb(129, 140, 248);
+    --tw-ring-offset-shadow: var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color);
+    --tw-ring-shadow: var(--tw-ring-inset) 0 0 0 calc(0px + var(--tw-ring-offset-width)) var(--tw-ring-color);
+    box-shadow: var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow, 0 0 #0000);
+}
+
 .pepper-input.icon-user,
 .pepper-input.icon-phone,
-.pepper-input.icon-email {
+.pepper-input.icon-email,
+.pepper-input.icon-lock {
     background-repeat: no-repeat;
     background-position: 8px center;
     background-size: 16px;
@@ -1025,6 +851,58 @@ html,
 }
 
 .pepper-input.icon-phone {
-    background-image: url('data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="slategray" width="14" height="14"%3E%3Cpath stroke-linecap="round" stroke-linejoin="round" d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 002.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 01-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 00-1.091-.852H4.5A2.25 2.25 0 002.25 4.5v2.25z"/%3E%3C/svg%3E')
+    background-image: url('data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="slategray" width="14" height="14"%3E%3Cpath stroke-linecap="round" stroke-linejoin="round" d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 002.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 01-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 00-1.091-.852H4.5A2.25 2.25 0 002.25 4.5v2.25z"/%3E%3C/svg%3E');
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+}
+
+.pepper-input.icon-lock {
+    background-image: url('data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="slategray" width="14" height="14"%3E%3Cpath fill-rule="evenodd" d="M12 1.5a5.25 5.25 0 00-5.25 5.25v3a3 3 0 00-3 3v6.75a3 3 0 003 3h10.5a3 3 0 003-3v-6.75a3 3 0 00-3-3v-3c0-2.9-2.35-5.25-5.25-5.25zm3.75 8.25v-3a3.75 3.75 0 10-7.5 0v3h7.5z" clip-rule="evenodd"/%3E%3C/svg%3E')
+}
+
+.pepper-payment-tab {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    background-color: #fff;
+    font-weight: 600;
+    border-radius: 0.375rem;
+    width: 29%;
+    gap: 0.25rem;
+    border: 1px solid rgb(148, 163, 184);
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+    color: rgb(107, 114, 128);
+    letter-spacing: -0.025em;
+    opacity: 0.7;
+    transition-duration: 300ms;
+    transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter, -webkit-backdrop-filter;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    padding: 0.625rem 1rem;
+    filter: grayscale(1);
+    -webkit-filter: grayscale(1);
+    /* 'hover:border-indigo-600 hover:text-indigo-500 ' */
+}
+
+.pepper-payment-tab.selected-tab {
+    color: rgb(99 102 241);
+    border-color: rgb(79 70 229);
+    filter: none;
+    -webkit-filter: none;
+    opacity: 1;
+}
+
+
+
+@media (min-width: 1024px) {
+    .pepper-payment-tab {
+        flex-direction: row;
+        padding-top: 1rem;
+        padding-bottom: 1rem;
+        gap: 0.35rem;
+        justify-content: flex-start;
+        width: 16.666667%;
+    }
 }
 </style>
