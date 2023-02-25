@@ -544,7 +544,7 @@ export default {
                         <FormLabel name="Mês:" />
                         <select
                             required
-                            :class="[{ 'text-gray-400': !cardExpirationMonth, 'border-red-500 focus:border-red-500': cardExpirationMonth !== null && cardExpirationYear !== null && cardExpirationDateIsValid == false }, 'pepper-input']"
+                            :class="[{ 'text-gray-400': !cardExpirationMonth, 'input-has-error': cardExpirationMonth !== null && cardExpirationYear !== null && cardExpirationDateIsValid == false }, 'pepper-input']"
                             v-model="cardExpirationMonth"
                             ref="cardExpirationMonth"
                             @change="validateCardExpirationDate(cardExpirationMonth, cardExpirationYear)">
@@ -562,7 +562,7 @@ export default {
                         <FormLabel name="Ano:" />
                         <select
                             required
-                            :class="[{ 'text-gray-400': !cardExpirationYear, 'border-red-500 focus:border-red-500': cardExpirationMonth !== null && cardExpirationYear !== null && cardExpirationDateIsValid == false }, 'pepper-input']"
+                            :class="[{ 'text-gray-400': !cardExpirationYear, 'input-has-error': cardExpirationMonth !== null && cardExpirationYear !== null && cardExpirationDateIsValid == false }, 'pepper-input']"
                             v-model="cardExpirationYear"
                             ref="cardExpirationYear"
                             @change="validateCardExpirationDate(cardExpirationMonth, cardExpirationYear)">
@@ -576,7 +576,7 @@ export default {
                     <div class="col-span-1">
                         <FormLabel name="CVV:" />
                         <input
-                            :class="[{ 'border-red-500 focus:border-red-500': cvvIsValid == false }, 'pepper-input icon-lock']"
+                            :class="[{ 'input-has-error': cvvIsValid == false }, 'pepper-input icon-lock']"
                             required
                             @input="validateCVV(cvv)"
                             v-model="cvv"
